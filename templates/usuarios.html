@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block title %}Gestión de Usuarios - Registro Físico{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1><i class="fas fa-users"></i> Gestión de Usuarios</h1>
+            <a href="{{ url_for('nuevo_usuario') }}" class="btn btn-primary">
+                <i class="fas fa-user-plus"></i> Nuevo Usuario
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-list"></i> Lista de Usuarios
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if usuarios %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Género</th>
+                                    <th>Fecha de Nacimiento</th>
+                                    <th>Estado</th>
+                                    <th>Registros</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for usuario in usuarios %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ usuario.nombre_completo }}</strong>
+                                    </td>
+                                    <td>
+                                        {% if usuario.genero %}
+                                            {% if usuario.genero == 'M' %}
+                                                <i class="fas fa-mars text-primary"></i> Masculino
+                                            {% else %}
+                                                <i class="fas fa-venus text-pink"></i> Femenino
+                                            {% endif %}
+                                        {% else %}
+                                            <span class="text-muted">No especificado</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if usuario.fecha_nacimiento %}
+                                            {{ usuario.fecha_nacimiento.strftime('%d/%m/%Y') }}
+                                        {% else %}
+                                            <span class="text-muted">No especificada</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <span class="badge {% if usuario.activo %}bg-success{% else %}bg-secondary{% endif %}">
+                                            {% if usuario.activo %}Activo{% else %}Inactivo{% endif %}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-info">{{ usuario.registros|length }}</span>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a href="{{ url_for('ver_usuario', usuario_id=usuario.id) }}" 
+                                               class="btn btn-sm btn-outline-primary" title="Ver Perfil">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a href="{{ url_for('editar_usuario', usuario_id=usuario.id) }}" 
+                                               class="btn btn-sm btn-outline-warning" title="Editar">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            {% if usuario.activo %}
+                                            <button type="button" class="btn btn-sm btn-outline-danger" 
+                                                    title="Desactivar" 
+                                                    onclick="confirmarDesactivacion({{ usuario.id }}, '{{ usuario.nombre_completo }}')">
+                                                <i class="fas fa-user-times"></i>
+                                            </button>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No hay usuarios registrados</h5>
+                        <p class="text-muted">Comienza creando el primer usuario</p>
+                        <a href="{{ url_for('nuevo_usuario') }}" class="btn btn-primary">
+                            <i class="fas fa-user-plus"></i> Crear Primer Usuario
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de confirmación para desactivar -->
+<div class="modal fade" id="confirmarDesactivarModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar Desactivación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro de que quieres desactivar al usuario <strong id="nombreUsuario"></strong>?</p>
+                <p class="text-muted small">El usuario será marcado como inactivo pero sus registros se mantendrán.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form id="formDesactivar" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">Desactivar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function confirmarDesactivacion(id, nombre) {
+    document.getElementById('nombreUsuario').textContent = nombre;
+    const form = document.getElementById('formDesactivar');
+    form.action = '{{ url_for("eliminar_usuario", usuario_id=0) }}'.replace('0', id);
+    
+    const modal = new bootstrap.Modal(document.getElementById('confirmarDesactivarModal'));
+    modal.show();
+}
+</script>
+{% endblock %}

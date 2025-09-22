@@ -1,0 +1,516 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Registro - Registro Físico{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1><i class="fas fa-edit"></i> Editar Registro</h1>
+            <a href="{{ url_for('ver_registro', id=registro.id) }}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left"></i> Volver
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <form method="POST">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-weight"></i> Datos Básicos
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="peso" class="form-label">Peso (kg) *</label>
+                                <input type="number" class="form-control" id="peso" name="peso" 
+                                       step="0.1" min="0" value="{{ registro.peso }}" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="altura" class="form-label">Altura (m) *</label>
+                                <input type="number" class="form-control" id="altura" name="altura" 
+                                       step="0.01" min="0" max="3" value="{{ registro.altura }}" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="bg-info bg-opacity-10 border border-info border-opacity-25 rounded p-2">
+                                <i class="fas fa-info-circle"></i>
+                                <strong>IMC:</strong> <span id="imc-resultado">{{ registro.imc }} - {{ registro.clasificacion_imc() }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-ruler"></i> Pliegues Cutáneos (mm)
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <!-- Diagrama de pliegues -->
+                    <div class="row mb-4">
+                        <div class="col-12 text-center">
+                            <h6 class="text-muted mb-3">Técnica de medición de pliegues cutáneos</h6>
+                            <div class="row">
+                                <div class="col-md-4 text-center mb-3">
+                                    <h6 class="text-primary">Tricipital</h6>
+                                    <img src="{{ url_for('static', filename='pliegue-triceps.gif') }}" 
+                                         alt="Técnica de medición tricipital" 
+                                         style="max-width: 200px; height: auto; border: 1px solid #ddd; border-radius: 8px;">
+                                </div>
+                                <div class="col-md-4 text-center mb-3">
+                                    <h6 class="text-primary">Subescapular</h6>
+                                    <img src="{{ url_for('static', filename='pliegue-subescapular.gif') }}" 
+                                         alt="Técnica de medición subescapular" 
+                                         style="max-width: 200px; height: auto; border: 1px solid #ddd; border-radius: 8px;">
+                                </div>
+                                <div class="col-md-4 text-center mb-3">
+                                    <h6 class="text-primary">Suprailíaco</h6>
+                                    <img src="{{ url_for('static', filename='pliegue-cresta-iliaca.gif') }}" 
+                                         alt="Técnica de medición suprailíaco" 
+                                         style="max-width: 200px; height: auto; border: 1px solid #ddd; border-radius: 8px;">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4 text-center mb-3">
+                                    <h6 class="text-primary">Abdominal</h6>
+                                    <img src="{{ url_for('static', filename='pliegue-abdominal.gif') }}" 
+                                         alt="Técnica de medición abdominal" 
+                                         style="max-width: 200px; height: auto; border: 1px solid #ddd; border-radius: 8px;">
+                                </div>
+                                <div class="col-md-4 text-center mb-3">
+                                    <h6 class="text-primary">Muslo Anterior</h6>
+                                    <img src="{{ url_for('static', filename='pliegue-muslo.gif') }}" 
+                                         alt="Técnica de medición muslo anterior" 
+                                         style="max-width: 200px; height: auto; border: 1px solid #ddd; border-radius: 8px;">
+                                </div>
+                                <div class="col-md-4 text-center mb-3">
+                                    <h6 class="text-primary">Pantorrilla</h6>
+                                    <img src="{{ url_for('static', filename='pliegue-pantorrilla.gif') }}" 
+                                         alt="Técnica de medición pantorrilla" 
+                                         style="max-width: 200px; height: auto; border: 1px solid #ddd; border-radius: 8px;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-section">
+                        <h6>Pliegues Superiores</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label class="form-label">Tricipital (mm)</label>
+                                    <div class="bg-info bg-opacity-10 border border-info border-opacity-25 rounded p-2 py-2 mb-2">
+                                        <small><strong>Ubicación:</strong> Parte posterior del brazo, punto medio entre el acromion y el olécranon.<br>
+                                        <strong>Técnica:</strong> Brazo relajado al lado del cuerpo, pliegue vertical en la línea media posterior del brazo.</small>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <input type="number" class="form-control pliegue-input" 
+                                                   id="pliegue_tricipital_1" name="pliegue_tricipital_1" 
+                                                   step="0.1" min="0" placeholder="Med. 1"
+                                                   value="{{ registro.pliegue_tricipital_1 or '' }}">
+                                        </div>
+                                        <div class="col-4">
+                                            <input type="number" class="form-control pliegue-input" 
+                                                   id="pliegue_tricipital_2" name="pliegue_tricipital_2" 
+                                                   step="0.1" min="0" placeholder="Med. 2"
+                                                   value="{{ registro.pliegue_tricipital_2 or '' }}">
+                                        </div>
+                                        <div class="col-4">
+                                            <input type="number" class="form-control pliegue-input" 
+                                                   id="pliegue_tricipital_3" name="pliegue_tricipital_3" 
+                                                   step="0.1" min="0" placeholder="Med. 3"
+                                                   value="{{ registro.pliegue_tricipital_3 or '' }}">
+                                        </div>
+                                    </div>
+                                    <div class="mt-2">
+                                        <strong>Promedio: <span id="promedio_tricipital" class="text-primary">{{ registro.pliegue_tricipital_promedio or '-' }}</span> mm</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label class="form-label">Subescapular (mm)</label>
+                                    <div class="bg-info bg-opacity-10 border border-info border-opacity-25 rounded p-2 py-2 mb-2">
+                                        <small><strong>Ubicación:</strong> Debajo del ángulo inferior de la escápula.<br>
+                                        <strong>Técnica:</strong> Pliegue diagonal (45°) hacia abajo y hacia afuera, en la línea natural de la piel.</small>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <input type="number" class="form-control pliegue-input" 
+                                                   id="pliegue_subescapular_1" name="pliegue_subescapular_1" 
+                                                   step="0.1" min="0" placeholder="Med. 1"
+                                                   value="{{ registro.pliegue_subescapular_1 or '' }}">
+                                        </div>
+                                        <div class="col-4">
+                                            <input type="number" class="form-control pliegue-input" 
+                                                   id="pliegue_subescapular_2" name="pliegue_subescapular_2" 
+                                                   step="0.1" min="0" placeholder="Med. 2"
+                                                   value="{{ registro.pliegue_subescapular_2 or '' }}">
+                                        </div>
+                                        <div class="col-4">
+                                            <input type="number" class="form-control pliegue-input" 
+                                                   id="pliegue_subescapular_3" name="pliegue_subescapular_3" 
+                                                   step="0.1" min="0" placeholder="Med. 3"
+                                                   value="{{ registro.pliegue_subescapular_3 or '' }}">
+                                        </div>
+                                    </div>
+                                    <div class="mt-2">
+                                        <strong>Promedio: <span id="promedio_subescapular" class="text-primary">{{ registro.pliegue_subescapular_promedio or '-' }}</span> mm</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h6>Pliegues Troncales</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label class="form-label">Suprailíaco (mm)</label>
+                                    <div class="bg-info bg-opacity-10 border border-info border-opacity-25 rounded p-2 py-2 mb-2">
+                                        <small><strong>Ubicación:</strong> Cresta ilíaca, línea axilar media, justo encima de la cresta ilíaca.<br>
+                                        <strong>Técnica:</strong> Pliegue diagonal (45°) hacia abajo y hacia adelante, siguiendo la orientación natural de la piel.</small>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <input type="number" class="form-control pliegue-input" 
+                                                   id="pliegue_suprailiaco_1" name="pliegue_suprailiaco_1" 
+                                                   step="0.1" min="0" placeholder="Med. 1"
+                                                   value="{{ registro.pliegue_suprailiaco_1 or '' }}">
+                                        </div>
+                                        <div class="col-4">
+                                            <input type="number" class="form-control pliegue-input" 
+                                                   id="pliegue_suprailiaco_2" name="pliegue_suprailiaco_2" 
+                                                   step="0.1" min="0" placeholder="Med. 2"
+                                                   value="{{ registro.pliegue_suprailiaco_2 or '' }}">
+                                        </div>
+                                        <div class="col-4">
+                                            <input type="number" class="form-control pliegue-input" 
+                                                   id="pliegue_suprailiaco_3" name="pliegue_suprailiaco_3" 
+                                                   step="0.1" min="0" placeholder="Med. 3"
+                                                   value="{{ registro.pliegue_suprailiaco_3 or '' }}">
+                                        </div>
+                                    </div>
+                                    <div class="mt-2">
+                                        <strong>Promedio: <span id="promedio_suprailiaco" class="text-primary">{{ registro.pliegue_suprailiaco_promedio or '-' }}</span> mm</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label class="form-label">Abdominal (mm)</label>
+                                    <div class="bg-info bg-opacity-10 border border-info border-opacity-25 rounded p-2 py-2 mb-2">
+                                        <small><strong>Ubicación:</strong> 2-3 cm a la derecha del ombligo, a la altura del ombligo.<br>
+                                        <strong>Técnica:</strong> Pliegue vertical, sujeto debe estar de pie con abdomen relajado.</small>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <input type="number" class="form-control pliegue-input" 
+                                                   id="pliegue_abdominal_1" name="pliegue_abdominal_1" 
+                                                   step="0.1" min="0" placeholder="Med. 1"
+                                                   value="{{ registro.pliegue_abdominal_1 or '' }}">
+                                        </div>
+                                        <div class="col-4">
+                                            <input type="number" class="form-control pliegue-input" 
+                                                   id="pliegue_abdominal_2" name="pliegue_abdominal_2" 
+                                                   step="0.1" min="0" placeholder="Med. 2"
+                                                   value="{{ registro.pliegue_abdominal_2 or '' }}">
+                                        </div>
+                                        <div class="col-4">
+                                            <input type="number" class="form-control pliegue-input" 
+                                                   id="pliegue_abdominal_3" name="pliegue_abdominal_3" 
+                                                   step="0.1" min="0" placeholder="Med. 3"
+                                                   value="{{ registro.pliegue_abdominal_3 or '' }}">
+                                        </div>
+                                    </div>
+                                    <div class="mt-2">
+                                        <strong>Promedio: <span id="promedio_abdominal" class="text-primary">{{ registro.pliegue_abdominal_promedio or '-' }}</span> mm</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h6>Pliegues Inferiores</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label class="form-label">Muslo Anterior (mm)</label>
+                                    <div class="bg-info bg-opacity-10 border border-info border-opacity-25 rounded p-2 py-2 mb-2">
+                                        <small><strong>Ubicación:</strong> Punto medio entre la ingle y la rótula, en la parte anterior del muslo.<br>
+                                        <strong>Técnica:</strong> Pliegue vertical, sujeto de pie con peso distribuido uniformemente en ambas piernas.</small>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <input type="number" class="form-control pliegue-input" 
+                                                   id="pliegue_muslo_anterior_1" name="pliegue_muslo_anterior_1" 
+                                                   step="0.1" min="0" placeholder="Med. 1"
+                                                   value="{{ registro.pliegue_muslo_anterior_1 or '' }}">
+                                        </div>
+                                        <div class="col-4">
+                                            <input type="number" class="form-control pliegue-input" 
+                                                   id="pliegue_muslo_anterior_2" name="pliegue_muslo_anterior_2" 
+                                                   step="0.1" min="0" placeholder="Med. 2"
+                                                   value="{{ registro.pliegue_muslo_anterior_2 or '' }}">
+                                        </div>
+                                        <div class="col-4">
+                                            <input type="number" class="form-control pliegue-input" 
+                                                   id="pliegue_muslo_anterior_3" name="pliegue_muslo_anterior_3" 
+                                                   step="0.1" min="0" placeholder="Med. 3"
+                                                   value="{{ registro.pliegue_muslo_anterior_3 or '' }}">
+                                        </div>
+                                    </div>
+                                    <div class="mt-2">
+                                        <strong>Promedio: <span id="promedio_muslo_anterior" class="text-primary">{{ registro.pliegue_muslo_anterior_promedio or '-' }}</span> mm</strong>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label class="form-label">Pantorrilla (mm)</label>
+                                    <div class="bg-info bg-opacity-10 border border-info border-opacity-25 rounded p-2 py-2 mb-2">
+                                        <small><strong>Ubicación:</strong> Punto más ancho de la pantorrilla, en la parte medial posterior.<br>
+                                        <strong>Técnica:</strong> Pliegue vertical, sujeto de pie con peso en la pierna no medida, pierna medida relajada.</small>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <input type="number" class="form-control pliegue-input" 
+                                                   id="pliegue_pantorrilla_1" name="pliegue_pantorrilla_1" 
+                                                   step="0.1" min="0" placeholder="Med. 1"
+                                                   value="{{ registro.pliegue_pantorrilla_1 or '' }}">
+                                        </div>
+                                        <div class="col-4">
+                                            <input type="number" class="form-control pliegue-input" 
+                                                   id="pliegue_pantorrilla_2" name="pliegue_pantorrilla_2" 
+                                                   step="0.1" min="0" placeholder="Med. 2"
+                                                   value="{{ registro.pliegue_pantorrilla_2 or '' }}">
+                                        </div>
+                                        <div class="col-4">
+                                            <input type="number" class="form-control pliegue-input" 
+                                                   id="pliegue_pantorrilla_3" name="pliegue_pantorrilla_3" 
+                                                   step="0.1" min="0" placeholder="Med. 3"
+                                                   value="{{ registro.pliegue_pantorrilla_3 or '' }}">
+                                        </div>
+                                    </div>
+                                    <div class="mt-2">
+                                        <strong>Promedio: <span id="promedio_pantorrilla" class="text-primary">{{ registro.pliegue_pantorrilla_promedio or '-' }}</span> mm</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-circle"></i> Circunferencias (cm)
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <!-- Diagrama de circunferencias -->
+                    <div class="form-section">
+                        <h6>Circunferencias Superiores</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="circunferencia_cuello" class="form-label">Cuello</label>
+                                    <input type="number" class="form-control" id="circunferencia_cuello" 
+                                           name="circunferencia_cuello" step="0.1" min="0" 
+                                           value="{{ registro.circunferencia_cuello or '' }}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="circunferencia_pecho" class="form-label">Pecho</label>
+                                    <input type="number" class="form-control" id="circunferencia_pecho" 
+                                           name="circunferencia_pecho" step="0.1" min="0" 
+                                           value="{{ registro.circunferencia_pecho or '' }}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="circunferencia_brazo" class="form-label">Brazo</label>
+                                    <input type="number" class="form-control" id="circunferencia_brazo" 
+                                           name="circunferencia_brazo" step="0.1" min="0" 
+                                           value="{{ registro.circunferencia_brazo or '' }}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="circunferencia_antebrazo" class="form-label">Antebrazo</label>
+                                    <input type="number" class="form-control" id="circunferencia_antebrazo" 
+                                           name="circunferencia_antebrazo" step="0.1" min="0" 
+                                           value="{{ registro.circunferencia_antebrazo or '' }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h6>Circunferencias Troncales</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="circunferencia_cintura" class="form-label">Cintura</label>
+                                    <input type="number" class="form-control" id="circunferencia_cintura" 
+                                           name="circunferencia_cintura" step="0.1" min="0" 
+                                           value="{{ registro.circunferencia_cintura or '' }}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="circunferencia_cadera" class="form-label">Cadera</label>
+                                    <input type="number" class="form-control" id="circunferencia_cadera" 
+                                           name="circunferencia_cadera" step="0.1" min="0" 
+                                           value="{{ registro.circunferencia_cadera or '' }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h6>Circunferencias Inferiores</h6>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="circunferencia_muslo" class="form-label">Muslo</label>
+                                    <input type="number" class="form-control" id="circunferencia_muslo" 
+                                           name="circunferencia_muslo" step="0.1" min="0" 
+                                           value="{{ registro.circunferencia_muslo or '' }}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="circunferencia_pantorrilla" class="form-label">Pantorrilla</label>
+                                    <input type="number" class="form-control" id="circunferencia_pantorrilla" 
+                                           name="circunferencia_pantorrilla" step="0.1" min="0" 
+                                           value="{{ registro.circunferencia_pantorrilla or '' }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-sticky-note"></i> Observaciones
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="form-group mb-3">
+                        <label for="observaciones" class="form-label">Notas adicionales</label>
+                        <textarea class="form-control" id="observaciones" name="observaciones" 
+                                  rows="3" placeholder="Observaciones sobre el estado físico, entrenamiento, etc.">{{ registro.observaciones or '' }}</textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{{ url_for('ver_registro', id=registro.id) }}" class="btn btn-outline-secondary me-md-2">
+                            <i class="fas fa-times"></i> Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Actualizar Registro
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function calcularIMC() {
+    const peso = parseFloat(document.getElementById('peso').value) || 0;
+    const altura = parseFloat(document.getElementById('altura').value) || 0;
+    
+    if (peso > 0 && altura > 0) {
+        const imc = peso / (altura * altura);
+        const resultado = document.getElementById('imc-resultado');
+        
+        let clasificacion = '';
+        let color = '';
+        
+        if (imc < 18.5) {
+            clasificacion = 'Bajo peso';
+            color = 'text-info';
+        } else if (imc < 25) {
+            clasificacion = 'Peso normal';
+            color = 'text-success';
+        } else if (imc < 30) {
+            clasificacion = 'Sobrepeso';
+            color = 'text-warning';
+        } else {
+            clasificacion = 'Obesidad';
+            color = 'text-danger';
+        }
+        
+        resultado.innerHTML = `<strong>${imc.toFixed(2)}</strong> - <span class="${color}">${clasificacion}</span>`;
+    } else {
+        document.getElementById('imc-resultado').textContent = 'Se calculará automáticamente';
+    }
+}
+
+// Calcular IMC en tiempo real
+document.getElementById('peso').addEventListener('input', calcularIMC);
+document.getElementById('altura').addEventListener('input', calcularIMC);
+
+// Función para calcular promedio de pliegues
+function calcularPromedioPliegue(med1, med2, med3) {
+    const valores = [med1, med2, med3].map(val => parseFloat(val) || 0).filter(val => val > 0);
+    if (valores.length >= 2) {
+        return (valores.reduce((sum, val) => sum + val, 0) / valores.length).toFixed(1);
+    }
+    return '-';
+}
+
+// Función para actualizar promedio de un pliegue específico
+function actualizarPromedio(pliegue) {
+    const med1 = document.getElementById(`pliegue_${pliegue}_1`).value;
+    const med2 = document.getElementById(`pliegue_${pliegue}_2`).value;
+    const med3 = document.getElementById(`pliegue_${pliegue}_3`).value;
+    const promedio = calcularPromedioPliegue(med1, med2, med3);
+    document.getElementById(`promedio_${pliegue}`).textContent = promedio;
+}
+
+// Agregar event listeners para todos los campos de pliegues
+const pliegues = ['tricipital', 'subescapular', 'suprailiaco', 'abdominal', 'muslo_anterior', 'pantorrilla'];
+
+pliegues.forEach(pliegue => {
+    for (let i = 1; i <= 3; i++) {
+        document.getElementById(`pliegue_${pliegue}_${i}`).addEventListener('input', () => {
+            actualizarPromedio(pliegue);
+        });
+    }
+});
+
+// Calcular promedios iniciales al cargar la página
+pliegues.forEach(pliegue => {
+    actualizarPromedio(pliegue);
+});
+</script>
+{% endblock %}

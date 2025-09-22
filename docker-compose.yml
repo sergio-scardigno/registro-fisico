@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  # Servicio principal de la aplicación
+  registro-fisico:
+    build: .
+    container_name: registro-fisico-app
+    ports:
+      - "5000:5000"
+    volumes:
+      # Montar directorio de datos para persistencia
+      - ./data:/app/instance
+    environment:
+      - FLASK_ENV=production
+      - FLASK_APP=app.py
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Servicio para desarrollo (opcional)
+  registro-fisico-dev:
+    build: .
+    container_name: registro-fisico-dev
+    ports:
+      - "5001:5000"
+    volumes:
+      - .:/app
+      - ./data:/app/instance
+    environment:
+      - FLASK_ENV=development
+      - FLASK_APP=app.py
+      - FLASK_DEBUG=1
+    restart: unless-stopped
+    profiles:
+      - dev
+
+# Volúmenes para persistencia de datos
+volumes:
+  data:
+    driver: local

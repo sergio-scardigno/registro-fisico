@@ -1,0 +1,81 @@
+<svg viewBox="0 0 600 800" xmlns="http://www.w3.org/2000/svg">
+  <!-- Imagen de fondo del cuerpo humano -->
+  <image href="http://127.0.0.1:5000/static/anatomia-humana-sobre-fondo-blanco.png" x="100" y="100" width="400" height="600" preserveAspectRatio="xMidYMid meet"/>
+  
+  <!-- Líneas de circunferencias basadas en estándares antropométricos -->
+  
+  <!-- 1. Cuello -->
+  <ellipse cx="300" cy="180" rx="35" ry="12" fill="none" stroke="#3498db" stroke-width="6" stroke-dasharray="10,6"/>
+  <text x="300" y="175" text-anchor="middle" font-size="16" fill="#3498db" font-weight="bold">1</text>
+  <text x="350" y="185" font-size="14" fill="#3498db" font-weight="bold">Cuello</text>
+  <line x1="300" y1="180" x2="350" y2="180" stroke="#3498db" stroke-width="3" marker-end="url(#arrowhead)"/>
+  
+  <!-- 2. Pecho -->
+  <ellipse cx="300" cy="250" rx="45" ry="20" fill="none" stroke="#3498db" stroke-width="6" stroke-dasharray="10,6"/>
+  <text x="300" y="245" text-anchor="middle" font-size="16" fill="#3498db" font-weight="bold">2</text>
+  <text x="360" y="255" font-size="14" fill="#3498db" font-weight="bold">Pecho</text>
+  <line x1="300" y1="250" x2="360" y2="250" stroke="#3498db" stroke-width="3" marker-end="url(#arrowhead)"/>
+  
+  <!-- 3. Brazo -->
+  <ellipse cx="200" cy="300" rx="15" ry="25" fill="none" stroke="#3498db" stroke-width="6" stroke-dasharray="10,6"/>
+  <text x="200" y="295" text-anchor="middle" font-size="16" fill="#3498db" font-weight="bold">3</text>
+  <text x="230" y="305" font-size="14" fill="#3498db" font-weight="bold">Brazo</text>
+  <line x1="200" y1="300" x2="230" y2="300" stroke="#3498db" stroke-width="3" marker-end="url(#arrowhead)"/>
+  
+  <!-- 4. Antebrazo -->
+  <ellipse cx="180" cy="350" rx="12" ry="20" fill="none" stroke="#3498db" stroke-width="6" stroke-dasharray="10,6"/>
+  <text x="180" y="345" text-anchor="middle" font-size="16" fill="#3498db" font-weight="bold">4</text>
+  <text x="210" y="355" font-size="14" fill="#3498db" font-weight="bold">Antebrazo</text>
+  <line x1="180" y1="350" x2="210" y2="350" stroke="#3498db" stroke-width="3" marker-end="url(#arrowhead)"/>
+  
+  <!-- 5. Cintura -->
+  <ellipse cx="300" cy="400" rx="40" ry="15" fill="none" stroke="#3498db" stroke-width="6" stroke-dasharray="10,6"/>
+  <text x="300" y="395" text-anchor="middle" font-size="16" fill="#3498db" font-weight="bold">5</text>
+  <text x="360" y="405" font-size="14" fill="#3498db" font-weight="bold">Cintura</text>
+  <line x1="300" y1="400" x2="360" y2="400" stroke="#3498db" stroke-width="3" marker-end="url(#arrowhead)"/>
+  
+  <!-- 6. Cadera -->
+  <ellipse cx="300" cy="450" rx="50" ry="25" fill="none" stroke="#3498db" stroke-width="6" stroke-dasharray="10,6"/>
+  <text x="300" y="445" text-anchor="middle" font-size="16" fill="#3498db" font-weight="bold">6</text>
+  <text x="370" y="455" font-size="14" fill="#3498db" font-weight="bold">Cadera</text>
+  <line x1="300" y1="450" x2="370" y2="450" stroke="#3498db" stroke-width="3" marker-end="url(#arrowhead)"/>
+  
+  <!-- 7. Muslo -->
+  <ellipse cx="280" cy="520" rx="20" ry="35" fill="none" stroke="#3498db" stroke-width="6" stroke-dasharray="10,6"/>
+  <text x="280" y="515" text-anchor="middle" font-size="16" fill="#3498db" font-weight="bold">7</text>
+  <text x="320" y="525" font-size="14" fill="#3498db" font-weight="bold">Muslo</text>
+  <line x1="280" y1="520" x2="320" y2="520" stroke="#3498db" stroke-width="3" marker-end="url(#arrowhead)"/>
+  
+  <!-- 8. Pantorrilla -->
+  <ellipse cx="290" cy="620" rx="18" ry="30" fill="none" stroke="#3498db" stroke-width="6" stroke-dasharray="10,6"/>
+  <text x="290" y="615" text-anchor="middle" font-size="16" fill="#3498db" font-weight="bold">8</text>
+  <text x="330" y="625" font-size="14" fill="#3498db" font-weight="bold">Pantorrilla</text>
+  <line x1="290" y1="620" x2="330" y2="620" stroke="#3498db" stroke-width="3" marker-end="url(#arrowhead)"/>
+  
+  <!-- Título principal -->
+  <text x="300" y="40" text-anchor="middle" font-size="24" fill="#2c3e50" font-weight="bold">Circunferencias Corporales</text>
+  <text x="300" y="60" text-anchor="middle" font-size="16" fill="#7f8c8d">Mediciones Antropométricas Estándar</text>
+  
+  <!-- Leyenda profesional -->
+  <rect x="20" y="650" width="560" height="130" fill="#f8f9fa" stroke="#dee2e6" stroke-width="2" rx="8"/>
+  <text x="30" y="670" font-size="16" fill="#2c3e50" font-weight="bold">📏 Puntos de Medición de Circunferencias</text>
+  
+  <text x="30" y="690" font-size="12" fill="#34495e"><tspan font-weight="bold">1. Cuello:</tspan> Punto más estrecho del cuello</text>
+  <text x="30" y="705" font-size="12" fill="#34495e"><tspan font-weight="bold">2. Pecho:</tspan> Nivel de los pezones, en espiración</text>
+  <text x="30" y="720" font-size="12" fill="#34495e"><tspan font-weight="bold">3. Brazo:</tspan> Punto más ancho del brazo relajado</text>
+  <text x="30" y="735" font-size="12" fill="#34495e"><tspan font-weight="bold">4. Antebrazo:</tspan> Punto más ancho del antebrazo</text>
+  <text x="30" y="750" font-size="12" fill="#34495e"><tspan font-weight="bold">5. Cintura:</tspan> Punto más estrecho entre costillas y cadera</text>
+  <text x="30" y="765" font-size="12" fill="#34495e"><tspan font-weight="bold">6. Cadera:</tspan> Punto más ancho de las nalgas</text>
+  <text x="30" y="780" font-size="12" fill="#34495e"><tspan font-weight="bold">7. Muslo:</tspan> Punto más ancho del muslo</text>
+  <text x="30" y="795" font-size="12" fill="#34495e"><tspan font-weight="bold">8. Pantorrilla:</tspan> Punto más ancho de la pantorrilla</text>
+  
+  <!-- Nota técnica -->
+  <text x="30" y="810" font-size="11" fill="#e74c3c" font-weight="bold">⚠️ Importante: Medir con cinta métrica flexible, sin comprimir la piel</text>
+  
+  <!-- Definir marcador de flecha -->
+  <defs>
+    <marker id="arrowhead" markerWidth="12" markerHeight="8" refX="11" refY="4" orient="auto">
+      <polygon points="0 0, 12 4, 0 8" fill="#3498db"/>
+    </marker>
+  </defs>
+</svg>

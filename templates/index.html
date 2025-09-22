@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+
+{% block title %}Inicio - Registro Físico{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1><i class="fas fa-users"></i> Usuarios</h1>
+            <a href="{{ url_for('nuevo_usuario') }}" class="btn btn-primary">
+                <i class="fas fa-user-plus"></i> Nuevo Usuario
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-users"></i> Lista de Usuarios
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if usuarios %}
+                    <div class="row">
+                        {% for usuario in usuarios %}
+                        <div class="col-md-6 col-lg-4 mb-3">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <h6 class="card-title mb-0">
+                                            <i class="fas fa-user"></i> {{ usuario.nombre_completo }}
+                                        </h6>
+                                        <span class="badge {% if usuario.activo %}bg-success{% else %}bg-secondary{% endif %}">
+                                            {% if usuario.activo %}Activo{% else %}Inactivo{% endif %}
+                                        </span>
+                                    </div>
+                                    {% if usuario.genero %}
+                                    <p class="card-text text-muted small mb-2">
+                                        <i class="fas fa-venus-mars"></i> 
+                                        {% if usuario.genero == 'M' %}Masculino{% else %}Femenino{% endif %}
+                                    </p>
+                                    {% endif %}
+                                    {% if usuario.fecha_nacimiento %}
+                                    <p class="card-text text-muted small mb-3">
+                                        <i class="fas fa-birthday-cake"></i> 
+                                        {{ usuario.fecha_nacimiento.strftime('%d/%m/%Y') }}
+                                    </p>
+                                    {% endif %}
+                                    <div class="d-grid gap-2">
+                                        <a href="{{ url_for('ver_usuario', usuario_id=usuario.id) }}" 
+                                           class="btn btn-outline-primary btn-sm">
+                                            <i class="fas fa-eye"></i> Ver Perfil
+                                        </a>
+                                        <div class="btn-group" role="group">
+                                            <a href="{{ url_for('nuevo_registro', usuario_id=usuario.id) }}" 
+                                               class="btn btn-success btn-sm" title="Nuevo Registro">
+                                                <i class="fas fa-plus"></i>
+                                            </a>
+                                            <a href="{{ url_for('estadisticas', usuario_id=usuario.id) }}" 
+                                               class="btn btn-info btn-sm" title="Estadísticas">
+                                                <i class="fas fa-chart-line"></i>
+                                            </a>
+                                            <a href="{{ url_for('editar_usuario', usuario_id=usuario.id) }}" 
+                                               class="btn btn-warning btn-sm" title="Editar Usuario">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-users fa-3x text-muted mb-3"></i>
+                        <h5 class="text-muted">No hay usuarios registrados</h5>
+                        <p class="text-muted">Comienza creando el primer usuario</p>
+                        <a href="{{ url_for('nuevo_usuario') }}" class="btn btn-primary">
+                            <i class="fas fa-user-plus"></i> Crear Primer Usuario
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de confirmación para eliminar -->
+<div class="modal fade" id="confirmarEliminarModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar Eliminación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                ¿Estás seguro de que quieres eliminar este registro? Esta acción no se puede deshacer.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form id="formEliminar" method="POST" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function confirmarEliminacion(id) {
+    const form = document.getElementById('formEliminar');
+    form.action = '{{ url_for("eliminar_registro", id=0) }}'.replace('0', id);
+    
+    const modal = new bootstrap.Modal(document.getElementById('confirmarEliminarModal'));
+    modal.show();
+}
+</script>
+{% endblock %}

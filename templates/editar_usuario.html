@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Usuario - Registro Físico{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1><i class="fas fa-user-edit"></i> Editar Usuario</h1>
+            <a href="{{ url_for('gestion_usuarios') }}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left"></i> Volver
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <form method="POST">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-user"></i> Información Personal
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="nombre" class="form-label">Nombre *</label>
+                                <input type="text" class="form-control" id="nombre" name="nombre" 
+                                       value="{{ usuario.nombre }}" required maxlength="100">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="apellido" class="form-label">Apellido *</label>
+                                <input type="text" class="form-control" id="apellido" name="apellido" 
+                                       value="{{ usuario.apellido }}" required maxlength="100">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
+                                <input type="date" class="form-control" id="fecha_nacimiento" 
+                                       name="fecha_nacimiento" 
+                                       value="{{ usuario.fecha_nacimiento.strftime('%Y-%m-%d') if usuario.fecha_nacimiento else '' }}">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group mb-3">
+                                <label for="genero" class="form-label">Género</label>
+                                <select class="form-select" id="genero" name="genero">
+                                    <option value="">Seleccionar...</option>
+                                    <option value="M" {% if usuario.genero == 'M' %}selected{% endif %}>Masculino</option>
+                                    <option value="F" {% if usuario.genero == 'F' %}selected{% endif %}>Femenino</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="activo" name="activo" 
+                                       {% if usuario.activo %}checked{% endif %}>
+                                <label class="form-check-label" for="activo">
+                                    Usuario activo
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{{ url_for('gestion_usuarios') }}" class="btn btn-outline-secondary me-md-2">
+                            <i class="fas fa-times"></i> Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Actualizar Usuario
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-info-circle"></i> Información del Usuario
+                </h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text">
+                    <strong>Fecha de creación:</strong><br>
+                    {{ usuario.fecha_creacion.strftime('%d/%m/%Y %H:%M') }}
+                </p>
+                <p class="card-text">
+                    <strong>Total de registros:</strong><br>
+                    <span class="badge bg-info">{{ usuario.registros|length }}</span>
+                </p>
+                <p class="card-text">
+                    <strong>Estado actual:</strong><br>
+                    <span class="badge {% if usuario.activo %}bg-success{% else %}bg-secondary{% endif %}">
+                        {% if usuario.activo %}Activo{% else %}Inactivo{% endif %}
+                    </span>
+                </p>
+                <hr>
+                <div class="d-grid gap-2">
+                    <a href="{{ url_for('ver_usuario', usuario_id=usuario.id) }}" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-eye"></i> Ver Perfil
+                    </a>
+                    <a href="{{ url_for('estadisticas', usuario_id=usuario.id) }}" class="btn btn-outline-info btn-sm">
+                        <i class="fas fa-chart-line"></i> Ver Estadísticas
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,244 @@
+{% extends "base.html" %}
+
+{% block title %}Guía de Mediciones - Registro Físico{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1><i class="fas fa-book"></i> Guía de Mediciones</h1>
+            <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left"></i> Volver
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-ruler"></i> Pliegues Cutáneos
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <h6>Técnica de Medición - GIFs Animados</h6>
+                        <div class="row">
+                            <div class="col-md-4 text-center mb-3">
+                                <h6 class="text-primary">Tricipital</h6>
+                                <img src="{{ url_for('static', filename='pliegue-triceps.gif') }}" 
+                                     alt="Técnica de medición tricipital" 
+                                     class="img-fluid" style="max-width: 200px; height: auto; border: 1px solid #ddd; border-radius: 8px;">
+                            </div>
+                            <div class="col-md-4 text-center mb-3">
+                                <h6 class="text-primary">Subescapular</h6>
+                                <img src="{{ url_for('static', filename='pliegue-subescapular.gif') }}" 
+                                     alt="Técnica de medición subescapular" 
+                                     class="img-fluid" style="max-width: 200px; height: auto; border: 1px solid #ddd; border-radius: 8px;">
+                            </div>
+                            <div class="col-md-4 text-center mb-3">
+                                <h6 class="text-primary">Suprailíaco</h6>
+                                <img src="{{ url_for('static', filename='pliegue-cresta-iliaca.gif') }}" 
+                                     alt="Técnica de medición suprailíaco" 
+                                     class="img-fluid" style="max-width: 200px; height: auto; border: 1px solid #ddd; border-radius: 8px;">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 text-center mb-3">
+                                <h6 class="text-primary">Abdominal</h6>
+                                <img src="{{ url_for('static', filename='pliegue-abdominal.gif') }}" 
+                                     alt="Técnica de medición abdominal" 
+                                     class="img-fluid" style="max-width: 200px; height: auto; border: 1px solid #ddd; border-radius: 8px;">
+                            </div>
+                            <div class="col-md-4 text-center mb-3">
+                                <h6 class="text-primary">Muslo Anterior</h6>
+                                <img src="{{ url_for('static', filename='pliegue-muslo.gif') }}" 
+                                     alt="Técnica de medición muslo anterior" 
+                                     class="img-fluid" style="max-width: 200px; height: auto; border: 1px solid #ddd; border-radius: 8px;">
+                            </div>
+                            <div class="col-md-4 text-center mb-3">
+                                <h6 class="text-primary">Pantorrilla</h6>
+                                <img src="{{ url_for('static', filename='pliegue-pantorrilla.gif') }}" 
+                                     alt="Técnica de medición pantorrilla" 
+                                     class="img-fluid" style="max-width: 200px; height: auto; border: 1px solid #ddd; border-radius: 8px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-12">
+                        <h6>Instrucciones de Medición:</h6>
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>N°</th>
+                                        <th>Pliegue</th>
+                                        <th>Ubicación</th>
+                                        <th>Instrucciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="badge bg-danger">1</span></td>
+                                        <td><strong>Tricipital</strong></td>
+                                        <td>Parte posterior del brazo</td>
+                                        <td>Verticalmente en el punto medio entre el hombro y el codo</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge bg-danger">2</span></td>
+                                        <td><strong>Subescapular</strong></td>
+                                        <td>Bajo el omóplato</td>
+                                        <td>Diagonalmente hacia abajo y afuera, 2cm debajo del ángulo inferior del omóplato</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge bg-danger">3</span></td>
+                                        <td><strong>Suprailíaco</strong></td>
+                                        <td>Encima de la cresta ilíaca</td>
+                                        <td>Diagonalmente hacia arriba y adentro, en la línea axilar media</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge bg-danger">4</span></td>
+                                        <td><strong>Abdominal</strong></td>
+                                        <td>Lateral al ombligo</td>
+                                        <td>Verticalmente, 2cm a la derecha del ombligo</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge bg-danger">5</span></td>
+                                        <td><strong>Muslo Anterior</strong></td>
+                                        <td>Parte frontal del muslo</td>
+                                        <td>Verticalmente en el punto medio entre la cadera y la rodilla</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge bg-danger">6</span></td>
+                                        <td><strong>Pantorrilla</strong></td>
+                                        <td>Parte posterior de la pierna</td>
+                                        <td>Verticalmente en el punto de mayor circunferencia de la pantorrilla</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-circle"></i> Circunferencias
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <h6>Instrucciones de Medición:</h6>
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>N°</th>
+                                        <th>Circunferencia</th>
+                                        <th>Instrucciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="badge bg-primary">1</span></td>
+                                        <td><strong>Cuello</strong></td>
+                                        <td>En el punto más estrecho, justo debajo de la laringe</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge bg-primary">2</span></td>
+                                        <td><strong>Pecho</strong></td>
+                                        <td>En el punto más ancho, a la altura de los pezones</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge bg-primary">3</span></td>
+                                        <td><strong>Brazo</strong></td>
+                                        <td>En el punto de mayor circunferencia del brazo relajado</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge bg-primary">4</span></td>
+                                        <td><strong>Antebrazo</strong></td>
+                                        <td>En el punto de mayor circunferencia del antebrazo</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge bg-primary">5</span></td>
+                                        <td><strong>Cintura</strong></td>
+                                        <td>En el punto más estrecho, entre la última costilla y la cresta ilíaca</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge bg-primary">6</span></td>
+                                        <td><strong>Cadera</strong></td>
+                                        <td>En el punto de mayor circunferencia de la cadera</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge bg-primary">7</span></td>
+                                        <td><strong>Muslo</strong></td>
+                                        <td>En el punto de mayor circunferencia del muslo</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge bg-primary">8</span></td>
+                                        <td><strong>Pantorrilla</strong></td>
+                                        <td>En el punto de mayor circunferencia de la pantorrilla</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-tips"></i> Consejos para Mediciones Precisas
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6><i class="fas fa-ruler"></i> Pliegues Cutáneos</h6>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success"></i> Usar un plicómetro calibrado</li>
+                            <li><i class="fas fa-check text-success"></i> Medir en el lado derecho del cuerpo</li>
+                            <li><i class="fas fa-check text-success"></i> Aplicar presión constante (10g/mm²)</li>
+                            <li><i class="fas fa-check text-success"></i> Tomar la medida 2-3 segundos después de aplicar presión</li>
+                            <li><i class="fas fa-check text-success"></i> Realizar 3 mediciones y promediar</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <h6><i class="fas fa-circle"></i> Circunferencias</h6>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success"></i> Usar una cinta métrica flexible</li>
+                            <li><i class="fas fa-check text-success"></i> Mantener la cinta paralela al suelo</li>
+                            <li><i class="fas fa-check text-success"></i> No comprimir la piel</li>
+                            <li><i class="fas fa-check text-success"></i> Medir en el lado derecho del cuerpo</li>
+                            <li><i class="fas fa-check text-success"></i> Tomar la medida al final de una espiración normal</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="alert alert-info mt-3">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Nota:</strong> Para obtener resultados más precisos, es recomendable que las mediciones sean realizadas por la misma persona y en condiciones similares (misma hora del día, mismo estado de hidratación, etc.).
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

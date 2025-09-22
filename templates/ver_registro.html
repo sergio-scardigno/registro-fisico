@@ -1,0 +1,251 @@
+{% extends "base.html" %}
+
+{% block title %}Ver Registro - Registro Físico{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1><i class="fas fa-eye"></i> Ver Registro</h1>
+            <div>
+                <a href="{{ url_for('editar_registro', id=registro.id) }}" class="btn btn-warning me-2">
+                    <i class="fas fa-edit"></i> Editar
+                </a>
+                <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left"></i> Volver
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-weight"></i> Datos Básicos
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6">
+                        <strong>Fecha:</strong><br>
+                        {{ registro.fecha.strftime('%d/%m/%Y %H:%M') }}
+                    </div>
+                    <div class="col-6">
+                        <strong>Peso:</strong><br>
+                        {{ registro.peso }} kg
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-6">
+                        <strong>Altura:</strong><br>
+                        {{ registro.altura }} m
+                    </div>
+                    <div class="col-6">
+                        <strong>IMC:</strong><br>
+                        <span class="fw-bold fs-5 
+                            {% if registro.imc < 18.5 %}imc-bajo
+                            {% elif registro.imc < 25 %}imc-normal
+                            {% elif registro.imc < 30 %}imc-sobrepeso
+                            {% else %}imc-obesidad{% endif %}">
+                            {{ registro.imc }}
+                        </span>
+                        <span class="badge ms-2
+                            {% if registro.imc < 18.5 %}bg-info
+                            {% elif registro.imc < 25 %}bg-success
+                            {% elif registro.imc < 30 %}bg-warning
+                            {% else %}bg-danger{% endif %}">
+                            {{ registro.clasificacion_imc() }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-chart-pie"></i> Resumen de Pliegues
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6">
+                        <strong>Sumatoria Total:</strong><br>
+                        <span class="fs-4">{{ "%.1f"|format(registro.sumatoria_pliegues()) }} mm</span>
+                    </div>
+                    <div class="col-6">
+                        <strong>Promedio:</strong><br>
+                        <span class="fs-5">{{ "%.1f"|format(registro.sumatoria_pliegues() / 6) }} mm</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-ruler"></i> Pliegues Cutáneos (mm)
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6">
+                        <strong>Tricipital:</strong><br>
+                        {% if registro.pliegue_tricipital_promedio %}
+                            <span class="fs-5 text-primary">{{ "%.1f"|format(registro.pliegue_tricipital_promedio) }} mm</span>
+                            <small class="text-muted d-block">
+                                ({{ registro.pliegue_tricipital_1 or '-' }}, {{ registro.pliegue_tricipital_2 or '-' }}, {{ registro.pliegue_tricipital_3 or '-' }})
+                            </small>
+                        {% else %}
+                            <span class="fs-5">N/A</span>
+                        {% endif %}
+                    </div>
+                    <div class="col-6">
+                        <strong>Subescapular:</strong><br>
+                        {% if registro.pliegue_subescapular_promedio %}
+                            <span class="fs-5 text-primary">{{ "%.1f"|format(registro.pliegue_subescapular_promedio) }} mm</span>
+                            <small class="text-muted d-block">
+                                ({{ registro.pliegue_subescapular_1 or '-' }}, {{ registro.pliegue_subescapular_2 or '-' }}, {{ registro.pliegue_subescapular_3 or '-' }})
+                            </small>
+                        {% else %}
+                            <span class="fs-5">N/A</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-6">
+                        <strong>Suprailíaco:</strong><br>
+                        {% if registro.pliegue_suprailiaco_promedio %}
+                            <span class="fs-5 text-primary">{{ "%.1f"|format(registro.pliegue_suprailiaco_promedio) }} mm</span>
+                            <small class="text-muted d-block">
+                                ({{ registro.pliegue_suprailiaco_1 or '-' }}, {{ registro.pliegue_suprailiaco_2 or '-' }}, {{ registro.pliegue_suprailiaco_3 or '-' }})
+                            </small>
+                        {% else %}
+                            <span class="fs-5">N/A</span>
+                        {% endif %}
+                    </div>
+                    <div class="col-6">
+                        <strong>Abdominal:</strong><br>
+                        {% if registro.pliegue_abdominal_promedio %}
+                            <span class="fs-5 text-primary">{{ "%.1f"|format(registro.pliegue_abdominal_promedio) }} mm</span>
+                            <small class="text-muted d-block">
+                                ({{ registro.pliegue_abdominal_1 or '-' }}, {{ registro.pliegue_abdominal_2 or '-' }}, {{ registro.pliegue_abdominal_3 or '-' }})
+                            </small>
+                        {% else %}
+                            <span class="fs-5">N/A</span>
+                        {% endif %}
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-6">
+                        <strong>Muslo Anterior:</strong><br>
+                        {% if registro.pliegue_muslo_anterior_promedio %}
+                            <span class="fs-5 text-primary">{{ "%.1f"|format(registro.pliegue_muslo_anterior_promedio) }} mm</span>
+                            <small class="text-muted d-block">
+                                ({{ registro.pliegue_muslo_anterior_1 or '-' }}, {{ registro.pliegue_muslo_anterior_2 or '-' }}, {{ registro.pliegue_muslo_anterior_3 or '-' }})
+                            </small>
+                        {% else %}
+                            <span class="fs-5">N/A</span>
+                        {% endif %}
+                    </div>
+                    <div class="col-6">
+                        <strong>Pantorrilla:</strong><br>
+                        {% if registro.pliegue_pantorrilla_promedio %}
+                            <span class="fs-5 text-primary">{{ "%.1f"|format(registro.pliegue_pantorrilla_promedio) }} mm</span>
+                            <small class="text-muted d-block">
+                                ({{ registro.pliegue_pantorrilla_1 or '-' }}, {{ registro.pliegue_pantorrilla_2 or '-' }}, {{ registro.pliegue_pantorrilla_3 or '-' }})
+                            </small>
+                        {% else %}
+                            <span class="fs-5">N/A</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-circle"></i> Circunferencias (cm)
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6">
+                        <strong>Cuello:</strong><br>
+                        <span class="fs-5">{{ registro.circunferencia_cuello or 'N/A' }}</span>
+                    </div>
+                    <div class="col-6">
+                        <strong>Pecho:</strong><br>
+                        <span class="fs-5">{{ registro.circunferencia_pecho or 'N/A' }}</span>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-6">
+                        <strong>Brazo:</strong><br>
+                        <span class="fs-5">{{ registro.circunferencia_brazo or 'N/A' }}</span>
+                    </div>
+                    <div class="col-6">
+                        <strong>Antebrazo:</strong><br>
+                        <span class="fs-5">{{ registro.circunferencia_antebrazo or 'N/A' }}</span>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-6">
+                        <strong>Cintura:</strong><br>
+                        <span class="fs-5">{{ registro.circunferencia_cintura or 'N/A' }}</span>
+                    </div>
+                    <div class="col-6">
+                        <strong>Cadera:</strong><br>
+                        <span class="fs-5">{{ registro.circunferencia_cadera or 'N/A' }}</span>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-6">
+                        <strong>Muslo:</strong><br>
+                        <span class="fs-5">{{ registro.circunferencia_muslo or 'N/A' }}</span>
+                    </div>
+                    <div class="col-6">
+                        <strong>Pantorrilla:</strong><br>
+                        <span class="fs-5">{{ registro.circunferencia_pantorrilla or 'N/A' }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if registro.observaciones %}
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-sticky-note"></i> Observaciones
+                </h5>
+            </div>
+            <div class="card-body">
+                <p class="mb-0">{{ registro.observaciones }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

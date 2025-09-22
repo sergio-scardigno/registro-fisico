@@ -1,0 +1,599 @@
+{% extends "base.html" %}
+
+{% block title %}Estadísticas - Registro Físico{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1><i class="fas fa-chart-line"></i> Estadísticas</h1>
+                <p class="text-muted mb-0">De: <strong>{{ usuario.nombre_completo }}</strong></p>
+            </div>
+            <a href="{{ url_for('ver_usuario', usuario_id=usuario.id) }}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left"></i> Volver
+            </a>
+        </div>
+    </div>
+</div>
+
+{% if estadisticas %}
+<!-- Diagramas de referencia -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-chart-area"></i> Referencias de Mediciones
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-8 text-center">
+                        <h6 class="text-muted">Técnica de Medición de Pliegues Cutáneos</h6>
+                        <div class="row">
+                            <div class="col-md-2 text-center mb-2">
+                                <h6 class="text-primary small">Tricipital</h6>
+                                <img src="{{ url_for('static', filename='pliegue-triceps.gif') }}" 
+                                     alt="Técnica de medición tricipital" 
+                                     class="img-fluid" style="max-width: 80px; height: auto; border: 1px solid #ddd; border-radius: 4px;">
+                            </div>
+                            <div class="col-md-2 text-center mb-2">
+                                <h6 class="text-primary small">Subescapular</h6>
+                                <img src="{{ url_for('static', filename='pliegue-subescapular.gif') }}" 
+                                     alt="Técnica de medición subescapular" 
+                                     class="img-fluid" style="max-width: 80px; height: auto; border: 1px solid #ddd; border-radius: 4px;">
+                            </div>
+                            <div class="col-md-2 text-center mb-2">
+                                <h6 class="text-primary small">Suprailíaco</h6>
+                                <img src="{{ url_for('static', filename='pliegue-cresta-iliaca.gif') }}" 
+                                     alt="Técnica de medición suprailíaco" 
+                                     class="img-fluid" style="max-width: 80px; height: auto; border: 1px solid #ddd; border-radius: 4px;">
+                            </div>
+                            <div class="col-md-2 text-center mb-2">
+                                <h6 class="text-primary small">Abdominal</h6>
+                                <img src="{{ url_for('static', filename='pliegue-abdominal.gif') }}" 
+                                     alt="Técnica de medición abdominal" 
+                                     class="img-fluid" style="max-width: 80px; height: auto; border: 1px solid #ddd; border-radius: 4px;">
+                            </div>
+                            <div class="col-md-2 text-center mb-2">
+                                <h6 class="text-primary small">Muslo</h6>
+                                <img src="{{ url_for('static', filename='pliegue-muslo.gif') }}" 
+                                     alt="Técnica de medición muslo anterior" 
+                                     class="img-fluid" style="max-width: 80px; height: auto; border: 1px solid #ddd; border-radius: 4px;">
+                            </div>
+                            <div class="col-md-2 text-center mb-2">
+                                <h6 class="text-primary small">Pantorrilla</h6>
+                                <img src="{{ url_for('static', filename='pliegue-pantorrilla.gif') }}" 
+                                     alt="Técnica de medición pantorrilla" 
+                                     class="img-fluid" style="max-width: 80px; height: auto; border: 1px solid #ddd; border-radius: 4px;">
+                            </div>
+                        </div>
+                        <p class="small text-muted mt-2">Técnicas de medición animadas (mm)</p>
+                    </div>
+                    <div class="col-md-4 text-center">
+                        <h6 class="text-muted">Guía Completa</h6>
+                        <div class="d-flex flex-column align-items-center">
+                            <i class="fas fa-book fa-3x text-info mb-2"></i>
+                            <a href="{{ url_for('guia_mediciones') }}" class="btn btn-outline-info btn-sm">
+                                <i class="fas fa-external-link-alt"></i> Ver Guía
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-clipboard-list fa-2x text-primary mb-2"></i>
+                <h5 class="card-title">Total Registros</h5>
+                <h3 class="text-primary">{{ estadisticas.total_registros }}</h3>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-weight fa-2x text-success mb-2"></i>
+                <h5 class="card-title">Peso Actual</h5>
+                <h3 class="text-success">{{ estadisticas.peso_actual }} kg</h3>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-chart-line fa-2x text-info mb-2"></i>
+                <h5 class="card-title">Diferencia</h5>
+                <h3 class="{% if estadisticas.diferencia_peso > 0 %}text-danger{% elif estadisticas.diferencia_peso < 0 %}text-success{% else %}text-muted{% endif %}">
+                    {% if estadisticas.diferencia_peso > 0 %}+{% endif %}{{ estadisticas.diferencia_peso }} kg
+                </h3>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-calculator fa-2x text-warning mb-2"></i>
+                <h5 class="card-title">IMC Actual</h5>
+                <h3 class="
+                    {% if estadisticas.imc_actual < 18.5 %}text-info
+                    {% elif estadisticas.imc_actual < 25 %}text-success
+                    {% elif estadisticas.imc_actual < 30 %}text-warning
+                    {% else %}text-danger{% endif %}">
+                    {{ estadisticas.imc_actual }}
+                </h3>
+                <small class="text-muted">{{ estadisticas.clasificacion_actual }}</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Nuevas tarjetas de grasa corporal -->
+{% if estadisticas.porcentaje_grasa_actual %}
+<div class="row mt-4">
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-percentage fa-2x text-primary mb-2"></i>
+                <h5 class="card-title">% Grasa Actual</h5>
+                <h3 class="text-primary">{{ estadisticas.porcentaje_grasa_actual }}%</h3>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-chart-pie fa-2x text-info mb-2"></i>
+                <h5 class="card-title">Percentila</h5>
+                <h3 class="text-info">{{ estadisticas.percentila_grasa_actual }}</h3>
+                <small class="text-muted">de la población</small>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-trophy fa-2x text-{{ estadisticas.clasificacion_grasa_actual[1] if estadisticas.clasificacion_grasa_actual[1] else 'muted' }} mb-2"></i>
+                <h5 class="card-title">Clasificación</h5>
+                <h3 class="text-{{ estadisticas.clasificacion_grasa_actual[1] if estadisticas.clasificacion_grasa_actual[1] else 'muted' }}">
+                    {{ estadisticas.clasificacion_grasa_actual[0] if estadisticas.clasificacion_grasa_actual[0] else 'N/A' }}
+                </h3>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-3">
+        <div class="card text-center">
+            <div class="card-body">
+                <i class="fas fa-chart-line fa-2x text-success mb-2"></i>
+                <h5 class="card-title">% Grasa Promedio</h5>
+                <h3 class="text-success">{{ "%.1f"|format(estadisticas.porcentaje_grasa_promedio) }}%</h3>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-weight"></i> Estadísticas de Peso
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-6">
+                        <strong>Peso Inicial:</strong><br>
+                        <span class="fs-4">{{ estadisticas.peso_inicial }} kg</span>
+                    </div>
+                    <div class="col-6">
+                        <strong>Peso Promedio:</strong><br>
+                        <span class="fs-4">{{ "%.1f"|format(estadisticas.peso_promedio) }} kg</span>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-6">
+                        <strong>Peso Mínimo:</strong><br>
+                        <span class="fs-5 text-success">{{ estadisticas.peso_minimo }} kg</span>
+                    </div>
+                    <div class="col-6">
+                        <strong>Peso Máximo:</strong><br>
+                        <span class="fs-5 text-danger">{{ estadisticas.peso_maximo }} kg</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-calculator"></i> Estadísticas de IMC
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-12">
+                        <strong>IMC Promedio:</strong><br>
+                        <span class="fs-4">{{ "%.2f"|format(estadisticas.imc_promedio) }}</span>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col-12">
+                        <strong>Clasificación Actual:</strong><br>
+                        <span class="badge fs-6
+                            {% if estadisticas.imc_actual < 18.5 %}bg-info
+                            {% elif estadisticas.imc_actual < 25 %}bg-success
+                            {% elif estadisticas.imc_actual < 30 %}bg-warning
+                            {% else %}bg-danger{% endif %}">
+                            {{ estadisticas.clasificacion_actual }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Sección de motivación con percentilas y clasificaciones -->
+{% if estadisticas.porcentaje_grasa_actual %}
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-gradient text-white" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-trophy"></i> Tu Progreso de Grasa Corporal
+                </h5>
+            </div>
+            <div class="card-body">
+                <!-- Progreso hacia el siguiente nivel -->
+                {% if estadisticas.progreso_grasa[1] %}
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="alert alert-info border-0 shadow-sm">
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <h4 class="alert-heading mb-2">
+                                        <i class="fas fa-target text-primary"></i> ¡Sigue así!
+                                    </h4>
+                                    <p class="mb-2">
+                                        Estás en <strong class="text-{{ estadisticas.clasificacion_grasa_actual[1] if estadisticas.clasificacion_grasa_actual[1] else 'muted' }}">
+                                        {{ estadisticas.progreso_grasa[0] }}</strong> con <strong>{{ estadisticas.porcentaje_grasa_actual }}%</strong> de grasa corporal.
+                                    </p>
+                                    <p class="mb-0">
+                                        <i class="fas fa-arrow-right text-success"></i> 
+                                        Te faltan <strong class="text-success">{{ "%.1f"|format(estadisticas.progreso_grasa[3]) }}%</strong> 
+                                        para llegar a <strong class="text-primary">{{ estadisticas.progreso_grasa[1] }}</strong> 
+                                        ({{ estadisticas.progreso_grasa[2] }}%)
+                                    </p>
+                                </div>
+                                <div class="col-md-4 text-center">
+                                    <div class="progress-circle mx-auto" style="width: 120px; height: 120px; position: relative;">
+                                        <svg width="120" height="120" class="progress-ring">
+                                            <circle cx="60" cy="60" r="50" fill="none" stroke="#e9ecef" stroke-width="8"/>
+                                            <circle cx="60" cy="60" r="50" fill="none" stroke="#28a745" stroke-width="8" 
+                                                    stroke-dasharray="{{ (100 - (estadisticas.progreso_grasa[3] / estadisticas.progreso_grasa[2] * 100)) * 3.14159 * 2 }} {{ 3.14159 * 2 * 50 }}"
+                                                    stroke-dashoffset="0" transform="rotate(-90 60 60)"/>
+                                        </svg>
+                                        <div class="progress-text" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                                            <strong class="text-success">{{ "%.0f"|format((1 - estadisticas.progreso_grasa[3] / estadisticas.progreso_grasa[2]) * 100) }}%</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-primary mb-3">
+                            <i class="fas fa-chart-pie"></i> Tu Percentila Actual
+                        </h6>
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <div class="mb-3">
+                                    <i class="fas fa-chart-pie fa-3x text-info"></i>
+                                </div>
+                                <h2 class="text-info mb-2">{{ estadisticas.percentila_grasa_actual }}</h2>
+                                <p class="text-muted mb-3">Percentila de la población</p>
+                                <p class="small">
+                                    Tu porcentaje de grasa corporal del <strong>{{ estadisticas.porcentaje_grasa_actual }}%</strong> 
+                                    te coloca en la percentila <strong>{{ estadisticas.percentila_grasa_actual }}</strong> 
+                                    de la población de tu edad y género.
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-3">
+                            <h6 class="text-success mb-2">¿Qué significa esto?</h6>
+                            <div class="list-group list-group-flush">
+                                <div class="list-group-item d-flex align-items-center px-0 py-2">
+                                    <i class="fas fa-check text-success me-2"></i>
+                                    <span><strong>Percentila 5-25:</strong> Muy por debajo del promedio</span>
+                                </div>
+                                <div class="list-group-item d-flex align-items-center px-0 py-2">
+                                    <i class="fas fa-check text-info me-2"></i>
+                                    <span><strong>Percentila 25-50:</strong> Por debajo del promedio</span>
+                                </div>
+                                <div class="list-group-item d-flex align-items-center px-0 py-2">
+                                    <i class="fas fa-check text-warning me-2"></i>
+                                    <span><strong>Percentila 50-75:</strong> Promedio</span>
+                                </div>
+                                <div class="list-group-item d-flex align-items-center px-0 py-2">
+                                    <i class="fas fa-check text-warning me-2"></i>
+                                    <span><strong>Percentila 75-90:</strong> Por encima del promedio</span>
+                                </div>
+                                <div class="list-group-item d-flex align-items-center px-0 py-2">
+                                    <i class="fas fa-exclamation text-danger me-2"></i>
+                                    <span><strong>Percentila 90+:</strong> Muy por encima del promedio</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <h6 class="text-primary mb-3">
+                            <i class="fas fa-scale-balanced"></i> Escala de Clasificación
+                        </h6>
+                        <div class="card border-0 shadow-sm">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-sm table-bordered mb-0">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th>Clasificación</th>
+                                                <th>Hombres (%)</th>
+                                                <th>Mujeres (%)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="table-danger">
+                                                <td><strong>Muy Bajo</strong></td>
+                                                <td>&lt; 8-13</td>
+                                                <td>&lt; 16-22</td>
+                                            </tr>
+                                            <tr class="table-warning">
+                                                <td><strong>Bajo</strong></td>
+                                                <td>8-11 a 13-16</td>
+                                                <td>16-20 a 22-26</td>
+                                            </tr>
+                                            <tr class="table-info">
+                                                <td><strong>Aceptable</strong></td>
+                                                <td>11-14 a 16-20</td>
+                                                <td>20-22 a 26-29</td>
+                                            </tr>
+                                            <tr class="table-success">
+                                                <td><strong>Promedio</strong></td>
+                                                <td>14-18 a 20-25</td>
+                                                <td>22-25 a 29-33</td>
+                                            </tr>
+                                            <tr class="table-warning">
+                                                <td><strong>Alto</strong></td>
+                                                <td>18-25 a 25-30</td>
+                                                <td>25-32 a 33-38</td>
+                                            </tr>
+                                            <tr class="table-danger">
+                                                <td><strong>Muy Alto</strong></td>
+                                                <td>&gt; 25-30</td>
+                                                <td>&gt; 32-38</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <small class="text-muted">
+                                    <i class="fas fa-info-circle"></i> 
+                                    Los rangos varían según la edad (18-39, 40-59, 60+ años)
+                                </small>
+                            </div>
+                        </div>
+                        
+                        <!-- Nueva escala de clasificación simplificada -->
+                        <div class="mt-3">
+                            <h6 class="text-primary mb-3">
+                                <i class="fas fa-chart-bar"></i> Escala Simplificada
+                            </h6>
+                            <div class="card border-0 shadow-sm">
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-sm table-bordered mb-0">
+                                            <thead class="table-dark">
+                                                <tr>
+                                                    <th>Clasificación</th>
+                                                    <th>Varones (%)</th>
+                                                    <th>Mujeres (%)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="table-danger">
+                                                    <td><strong>Muy Delgado</strong></td>
+                                                    <td>&lt; 10</td>
+                                                    <td>&lt; 13</td>
+                                                </tr>
+                                                <tr class="table-warning">
+                                                    <td><strong>Delgado</strong></td>
+                                                    <td>11-14</td>
+                                                    <td>13-17</td>
+                                                </tr>
+                                                <tr class="table-success">
+                                                    <td><strong>Promedio</strong></td>
+                                                    <td>15-17</td>
+                                                    <td>18-22</td>
+                                                </tr>
+                                                <tr class="table-warning">
+                                                    <td><strong>Grueso</strong></td>
+                                                    <td>18-19</td>
+                                                    <td>23-27</td>
+                                                </tr>
+                                                <tr class="table-danger">
+                                                    <td><strong>Obeso</strong></td>
+                                                    <td>≥ 20</td>
+                                                    <td>≥ 28</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <small class="text-muted">
+                                        <i class="fas fa-info-circle"></i> 
+                                        Escala de clasificación simplificada para referencia general
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Mensaje motivacional personalizado -->
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card border-0 shadow-sm" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-md-2 text-center">
+                                        <i class="fas fa-heart fa-3x text-danger"></i>
+                                    </div>
+                                    <div class="col-md-10">
+                                        <h5 class="card-title mb-3 text-{{ estadisticas.clasificacion_grasa_actual[1] if estadisticas.clasificacion_grasa_actual[1] else 'secondary' }}">
+                                            <i class="fas fa-user-check me-2"></i>Tu Estado Actual
+                                        </h5>
+                                        <div class="p-3 rounded" style="background-color: rgba(255, 255, 255, 0.8);">
+                                            <p class="mb-2 fs-5">
+                                                {% if estadisticas.clasificacion_grasa_actual[0] %}
+                                                    Tu clasificación actual es <strong class="text-{{ estadisticas.clasificacion_grasa_actual[1] if estadisticas.clasificacion_grasa_actual[1] else 'muted' }}">{{ estadisticas.clasificacion_grasa_actual[0] }}</strong> 
+                                                    con un porcentaje de grasa corporal del <strong class="text-primary">{{ estadisticas.porcentaje_grasa_actual }}%</strong>.
+                                                {% else %}
+                                                    No se pudo calcular tu clasificación de grasa corporal. 
+                                                    Asegúrate de tener registradas las mediciones de pliegues cutáneos.
+                                                {% endif %}
+                                            </p>
+                                            
+                                            {% if estadisticas.clasificacion_grasa_actual[0] %}
+                                                <div class="mt-3">
+                                                    {% if estadisticas.clasificacion_grasa_actual[0] in ['Muy Bajo', 'Bajo'] %}
+                                                        <div class="alert alert-success border-0 mb-0">
+                                                            <i class="fas fa-trophy me-2"></i>
+                                                            <strong>¡Excelente trabajo!</strong> Mantén tu rutina de ejercicio y alimentación saludable.
+                                                        </div>
+                                                    {% elif estadisticas.clasificacion_grasa_actual[0] in ['Aceptable', 'Promedio'] %}
+                                                        <div class="alert alert-info border-0 mb-0">
+                                                            <i class="fas fa-thumbs-up me-2"></i>
+                                                            <strong>Estás en un rango saludable.</strong> Continúa con tus hábitos positivos.
+                                                        </div>
+                                                    {% elif estadisticas.clasificacion_grasa_actual[0] in ['Alto', 'Muy Alto'] %}
+                                                        <div class="alert alert-warning border-0 mb-0">
+                                                            <i class="fas fa-dumbbell me-2"></i>
+                                                            <strong>Es un buen momento para enfocarte en reducir tu porcentaje de grasa corporal.</strong> 
+                                                            Considera aumentar la actividad física y ajustar tu alimentación.
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-history"></i> Historial de Registros
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Peso (kg)</th>
+                                <th>IMC</th>
+                                <th>Clasificación</th>
+                                <th>Diferencia Peso</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for registro in registros %}
+                            <tr>
+                                <td>{{ registro.fecha.strftime('%d/%m/%Y') }}</td>
+                                <td>{{ registro.peso }}</td>
+                                <td>
+                                    <span class="fw-bold 
+                                        {% if registro.imc < 18.5 %}imc-bajo
+                                        {% elif registro.imc < 25 %}imc-normal
+                                        {% elif registro.imc < 30 %}imc-sobrepeso
+                                        {% else %}imc-obesidad{% endif %}">
+                                        {{ registro.imc }}
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge 
+                                        {% if registro.imc < 18.5 %}bg-info
+                                        {% elif registro.imc < 25 %}bg-success
+                                        {% elif registro.imc < 30 %}bg-warning
+                                        {% else %}bg-danger{% endif %}">
+                                        {{ registro.clasificacion_imc() }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if loop.index < registros|length %}
+                                        {% set siguiente = registros[loop.index] %}
+                                        {% set diferencia = registro.peso - siguiente.peso %}
+                                        <span class="{% if diferencia > 0 %}text-danger{% elif diferencia < 0 %}text-success{% else %}text-muted{% endif %}">
+                                            {% if diferencia > 0 %}+{% endif %}{{ "%.1f"|format(diferencia) }} kg
+                                        </span>
+                                    {% else %}
+                                        <span class="text-muted">-</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% else %}
+<div class="row">
+    <div class="col-12">
+        <div class="text-center py-5">
+            <i class="fas fa-chart-line fa-3x text-muted mb-3"></i>
+            <h5 class="text-muted">No hay datos suficientes</h5>
+            <p class="text-muted">Necesitas al menos un registro para ver estadísticas</p>
+            <a href="{{ url_for('nuevo_registro', usuario_id=usuario.id) }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Crear Primer Registro
+            </a>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
