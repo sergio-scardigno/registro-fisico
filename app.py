@@ -760,4 +760,8 @@ def guia_mediciones():
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    app.run(debug=True)
+    
+    # Configuración para Docker
+    host = '0.0.0.0' if os.environ.get('FLASK_ENV') == 'production' else '127.0.0.1'
+    debug = os.environ.get('FLASK_ENV') != 'production'
+    app.run(host=host, debug=debug)

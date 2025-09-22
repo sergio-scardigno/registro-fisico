@@ -2,6 +2,17 @@
 
 Una aplicación web desarrollada en Python con Flask para registrar y gestionar mediciones corporales de múltiples personas, incluyendo peso, IMC, pliegues cutáneos y circunferencias.
 
+[![GitHub](https://img.shields.io/badge/GitHub-Repository-blue?style=flat-square&logo=github)](https://github.com/sergio-scardigno/registro-fisico)
+[![Docker Hub](https://img.shields.io/badge/Docker%20Hub-Image-blue?style=flat-square&logo=docker)](https://hub.docker.com/repository/docker/sergioscardigno82/registro-fisico)
+[![Python](https://img.shields.io/badge/Python-3.11+-green?style=flat-square&logo=python)](https://python.org)
+[![Flask](https://img.shields.io/badge/Flask-2.0+-red?style=flat-square&logo=flask)](https://flask.palletsprojects.com)
+
+## 🔗 Enlaces Rápidos
+
+- **📁 [Repositorio GitHub](https://github.com/sergio-scardigno/registro-fisico)** - Código fuente y documentación
+- **🐳 [Imagen Docker Hub](https://hub.docker.com/repository/docker/sergioscardigno82/registro-fisico)** - Imagen lista para usar
+- **📖 [Documentación](https://github.com/sergio-scardigno/registro-fisico#readme)** - Guía completa de uso
+
 ## Características
 
 - **👥 Múltiples Usuarios**: Gestión completa de usuarios con perfiles individuales
@@ -12,13 +23,39 @@ Una aplicación web desarrollada en Python con Flask para registrar y gestionar 
 - **🎨 Interfaz Moderna**: Diseño responsive con Bootstrap 5
 - **💾 Base de Datos**: SQLite para almacenamiento local con relaciones entre usuarios y registros
 
+## 🚀 Inicio Rápido
+
+### Usar con Docker (Recomendado)
+
+```bash
+# 1. Descargar y ejecutar la imagen
+docker run -p 5000:5000 -v $(pwd)/data:/app/instance sergioscardigno82/registro-fisico:latest
+
+# 2. Abrir en el navegador
+# http://localhost:5000
+```
+
+### Usar desde GitHub
+
+```bash
+# 1. Clonar el repositorio
+git clone https://github.com/sergio-scardigno/registro-fisico.git
+cd registro-fisico
+
+# 2. Instalar dependencias
+pip install -r requirements.txt
+
+# 3. Ejecutar la aplicación
+python app.py
+```
+
 ## Instalación
 
 ### Opción 1: Instalación Local
 
 1. **Clonar o descargar el proyecto**
    ```bash
-   git clone <url-del-repositorio>
+   git clone https://github.com/sergio-scardigno/registro-fisico.git
    cd registro-fisico
    ```
 
@@ -47,7 +84,7 @@ Una aplicación web desarrollada en Python con Flask para registrar y gestionar 
 
 1. **Clonar el proyecto**
    ```bash
-   git clone <url-del-repositorio>
+   git clone https://github.com/sergio-scardigno/registro-fisico.git
    cd registro-fisico
    ```
 
@@ -73,7 +110,7 @@ Una aplicación web desarrollada en Python con Flask para registrar y gestionar 
 
 1. **Descargar y ejecutar la imagen**
    ```bash
-   docker run -p 5000:5000 -v $(pwd)/data:/app/instance tu-usuario/registro-fisico:latest
+   docker run -p 5000:5000 -v $(pwd)/data:/app/instance sergioscardigno82/registro-fisico:latest
    ```
 
 ## Uso
@@ -185,32 +222,35 @@ Para agregar nuevos campos de medición:
 3. **Usar los scripts incluidos**
    ```bash
    # Linux/Mac
-   ./build-and-push.sh [version] [tu-usuario-dockerhub]
+   ./build-and-push.sh [version] [sergioscardigno82]
    
    # Windows
-   build-and-push.bat [version] [tu-usuario-dockerhub]
+   build-and-push.bat [version] [sergioscardigno82]
    ```
 
 4. **O manualmente**
    ```bash
    # Construir la imagen
-   docker build -t tu-usuario/registro-fisico:latest .
+   docker build -t sergioscardigno82/registro-fisico:latest .
    
    # Subir a Docker Hub
-   docker push tu-usuario/registro-fisico:latest
+   docker push sergioscardigno82/registro-fisico:latest
    ```
 
 ### Usar la Imagen desde Docker Hub
 
 ```bash
-# Descargar y ejecutar
-docker run -p 5000:5000 -v $(pwd)/data:/app/instance tu-usuario/registro-fisico:latest
+# Descargar y ejecutar (última versión)
+docker run -p 5000:5000 -v $(pwd)/data:/app/instance sergioscardigno82/registro-fisico:latest
+
+# Usar una versión específica
+docker run -p 5000:5000 -v $(pwd)/data:/app/instance sergioscardigno82/registro-fisico:v1.0.0
 
 # Con Docker Compose
 version: '3.8'
 services:
   registro-fisico:
-    image: tu-usuario/registro-fisico:latest
+    image: sergioscardigno82/registro-fisico:latest
     ports:
       - "5000:5000"
     volumes:
@@ -218,10 +258,53 @@ services:
     restart: unless-stopped
 ```
 
+### Tags Disponibles
+
+- `latest` - Última versión estable
+- `v1.0.0` - Versión específica (ejemplo)
+- `dev` - Versión de desarrollo
+
+### Comandos Útiles
+
+```bash
+# Ver todas las versiones disponibles
+docker search sergioscardigno82/registro-fisico
+
+# Ver información de la imagen
+docker inspect sergioscardigno82/registro-fisico:latest
+
+# Ejecutar en segundo plano
+docker run -d -p 5000:5000 -v $(pwd)/data:/app/instance sergioscardigno82/registro-fisico:latest
+
+# Ver logs
+docker logs <container_id>
+
+# Detener contenedor
+docker stop <container_id>
+```
+
 ## Licencia
 
 Este proyecto es de código abierto y está disponible bajo la licencia MIT.
 
+## 🤝 Contribuir
+
+¡Las contribuciones son bienvenidas! Si quieres contribuir al proyecto:
+
+1. **Fork** el repositorio
+2. **Crea** una rama para tu feature (`git checkout -b feature/nueva-funcionalidad`)
+3. **Commit** tus cambios (`git commit -m 'Agregar nueva funcionalidad'`)
+4. **Push** a la rama (`git push origin feature/nueva-funcionalidad`)
+5. **Abre** un Pull Request
+
+### Reportar Problemas
+
+Si encuentras algún problema o tienes sugerencias:
+
+- **🐛 [Reportar Bug](https://github.com/sergio-scardigno/registro-fisico/issues/new?template=bug_report.md)**
+- **💡 [Sugerir Mejora](https://github.com/sergio-scardigno/registro-fisico/issues/new?template=feature_request.md)**
+- **❓ [Hacer Pregunta](https://github.com/sergio-scardigno/registro-fisico/discussions)**
+
 ## Soporte
 
-Para reportar problemas o sugerir mejoras, por favor crea un issue en el repositorio del proyecto.
+Para reportar problemas o sugerir mejoras, por favor crea un issue en el [repositorio del proyecto](https://github.com/sergio-scardigno/registro-fisico/issues).

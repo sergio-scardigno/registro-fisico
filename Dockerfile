@@ -27,11 +27,14 @@ RUN mkdir -p instance
 
 # Crear usuario no-root para seguridad
 RUN adduser --disabled-password --gecos '' appuser && \
-    chown -R appuser:appuser /app
+    chown -R appuser:appuser /app && \
+    chmod -R 755 /app/instance
+
+# Cambiar a usuario no-root
 USER appuser
 
 # Exponer puerto 5000
 EXPOSE 5000
 
 # Comando de inicio
-CMD ["python", "app.py"]
+CMD ["sh", "-c", "python init_db.py && python app.py"]
