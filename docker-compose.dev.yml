@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  # Servicio para desarrollo
+  registro-fisico-dev:
+    image: sergioscardigno82/registro-fisico:latest
+    container_name: registro-fisico-dev
+    ports:
+      - "5001:5000"
+    volumes:
+      # Montar código fuente para desarrollo en vivo
+      - .:/app
+      - ./data:/app/instance
+    environment:
+      - FLASK_ENV=development
+      - FLASK_APP=app.py
+      - FLASK_DEBUG=1
+    restart: unless-stopped
+    networks:
+      - registro-fisico-dev-network
+
+networks:
+  registro-fisico-dev-network:
+    driver: bridge

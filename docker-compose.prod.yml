@@ -1,13 +1,14 @@
 version: '3.8'
 
 services:
-  # Servicio de producción optimizado
+  # Servicio principal de la aplicación (Producción)
   registro-fisico:
-    image: tu-usuario/registro-fisico:latest
-    container_name: registro-fisico-prod
+    image: sergioscardigno82/registro-fisico:latest
+    container_name: registro-fisico-app
     ports:
-      - "80:5000"  # Puerto 80 para producción
+      - "5000:5000"
     volumes:
+      # Montar directorio de datos para persistencia
       - ./data:/app/instance
     environment:
       - FLASK_ENV=production
@@ -19,14 +20,9 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
-    deploy:
-      resources:
-        limits:
-          memory: 512M
-        reservations:
-          memory: 256M
+    networks:
+      - registro-fisico-network
 
-# Volúmenes para persistencia
-volumes:
-  data:
-    driver: local
+networks:
+  registro-fisico-network:
+    driver: bridge

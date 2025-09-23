@@ -1,7 +1,7 @@
 services:
-  # Servicio principal de la aplicación
+  # Servicio principal de la aplicación (Producción)
   registro-fisico:
-    build: .
+    image: sergioscardigno82/registro-fisico:latest
     container_name: registro-fisico-app
     ports:
       - "5000:5000"
@@ -21,7 +21,7 @@ services:
 
   # Servicio para desarrollo (opcional)
   registro-fisico-dev:
-    build: .
+    image: sergioscardigno82/registro-fisico:latest
     container_name: registro-fisico-dev
     ports:
       - "5001:5000"
