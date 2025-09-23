@@ -167,6 +167,36 @@ python app.py
    docker run -d -p 5000:5000 -v $(pwd)/data:/app/instance --name registro-fisico sergioscardigno82/registro-fisico:latest
    ```
 
+### Opción 4: Despliegue en Servidor
+
+1. **Clonar el repositorio en el servidor**
+   ```bash
+   git clone https://github.com/sergio-scardigno/registro-fisico.git
+   cd registro-fisico
+   ```
+
+2. **Configurar permisos del directorio de datos**
+   ```bash
+   # Crear directorio de datos
+   mkdir -p ./data
+   
+   # Configurar permisos (Linux/Ubuntu)
+   sudo chown -R $USER:$USER ./data
+   chmod -R 775 ./data
+   
+   # Crear directorio instance en el contenedor
+   mkdir -p /app/instance
+   ```
+
+3. **Ejecutar con Docker Compose**
+   ```bash
+   # Producción
+   docker-compose -f docker-compose.prod.yml up -d
+   
+   # O con Docker directamente
+   docker run -d -p 5000:5000 -v $(pwd)/data:/app/instance --name registro-fisico sergioscardigno82/registro-fisico:latest
+   ```
+
 ## 📖 Uso
 
 1. **Abrir en el navegador**
@@ -303,6 +333,154 @@ El archivo CSV incluye:
 - Pliegues cutáneos (3 mediciones + promedio)
 - Circunferencias corporales
 - Cálculos derivados (porcentaje grasa, SPC, percentilas)
+
+## 🚀 Despliegue en Servidor
+
+### Preparación del Servidor
+
+1. **Instalar Docker y Docker Compose**
+   ```bash
+   # Ubuntu/Debian
+   sudo apt update
+   sudo apt install docker.io docker-compose
+   sudo systemctl start docker
+   sudo systemctl enable docker
+   
+   # Agregar usuario al grupo docker
+   sudo usermod -aG docker $USER
+   newgrp docker
+   ```
+
+2. **Clonar el repositorio**
+   ```bash
+   git clone https://github.com/sergio-scardigno/registro-fisico.git
+   cd registro-fisico
+   ```
+
+3. **Configurar directorios y permisos**
+   ```bash
+   # Crear directorio de datos
+   mkdir -p ./data
+   
+   # Configurar permisos (Linux/Ubuntu)
+   sudo chown -R $USER:$USER ./data
+   chmod -R 775 ./data
+   
+   # Crear directorio instance en el contenedor
+   mkdir -p /app/instance
+   ```
+
+### Despliegue en SupaBase o Servidores Cloud
+
+Para servidores como SupaBase, DigitalOcean, AWS, etc.:
+
+```bash
+# 1. Conectar al servidor
+ssh usuario@tu-servidor.com
+
+# 2. Clonar repositorio
+git clone https://github.com/sergio-scardigno/registro-fisico.git
+cd registro-fisico
+
+# 3. Configurar permisos (IMPORTANTE)
+mkdir -p ./data
+sudo chown -R $USER:$USER ./data
+chmod -R 775 ./data
+mkdir -p /app/instance
+
+# 4. Ejecutar con Docker Compose
+docker-compose -f docker-compose.prod.yml up -d
+
+# 5. Verificar funcionamiento
+curl http://localhost:5000
+```
+
+4. **Ejecutar la aplicación**
+   ```bash
+   # Con Docker Compose (recomendado)
+   docker-compose -f docker-compose.prod.yml up -d
+   
+   # O con Docker directamente
+   docker run -d -p 5000:5000 -v $(pwd)/data:/app/instance --name registro-fisico sergioscardigno82/registro-fisico:latest
+   ```
+
+5. **Verificar que esté funcionando**
+   ```bash
+   # Ver estado de contenedores
+   docker ps | grep registro-fisico
+   
+   # Ver logs
+   docker logs registro-fisico
+   
+   # Verificar salud
+   curl http://localhost:5000
+   ```
+
+### Configuración de Firewall (Opcional)
+
+```bash
+# Abrir puerto 5000 (si es necesario)
+sudo ufw allow 5000
+sudo ufw enable
+```
+
+### Configuración de Proxy Reverso (Nginx)
+
+```nginx
+server {
+    listen 80;
+    server_name tu-dominio.com;
+    
+    location / {
+        proxy_pass http://localhost:5000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+}
+```
+
+### Script de Despliegue Automatizado
+
+Para facilitar el despliegue, se incluye un script automatizado:
+
+```bash
+# Hacer ejecutable (Linux/Ubuntu)
+chmod +x deploy-server.sh
+
+# Comandos disponibles
+./deploy-server.sh install    # Instalar Docker y configurar entorno
+./deploy-server.sh setup      # Configurar directorios y permisos
+./deploy-server.sh start      # Iniciar la aplicación
+./deploy-server.sh stop       # Detener la aplicación
+./deploy-server.sh restart    # Reiniciar la aplicación
+./deploy-server.sh status     # Ver estado de la aplicación
+./deploy-server.sh update     # Actualizar a la última versión
+./deploy-server.sh backup     # Crear respaldo de datos
+./deploy-server.sh logs       # Ver logs en tiempo real
+./deploy-server.sh help       # Mostrar ayuda
+```
+
+### Comandos de Mantenimiento Manual
+
+```bash
+# Actualizar aplicación
+docker-compose -f docker-compose.prod.yml pull
+docker-compose -f docker-compose.prod.yml up -d
+
+# Ver logs
+docker-compose -f docker-compose.prod.yml logs -f
+
+# Reiniciar aplicación
+docker-compose -f docker-compose.prod.yml restart
+
+# Detener aplicación
+docker-compose -f docker-compose.prod.yml down
+
+# Respaldar datos
+tar -czf backup-$(date +%Y%m%d).tar.gz ./data/
+```
 
 ## 🐳 Docker Hub
 
