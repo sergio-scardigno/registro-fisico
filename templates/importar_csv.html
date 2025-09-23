@@ -7,7 +7,7 @@
     <div class="col-12">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-                <h1><i class="fas fa-file-import"></i> Importar Datos de Garmin</h1>
+                <h1><i class="fas fa-file-import"></i> Importar Datos</h1>
                 <p class="text-muted mb-0">Para: <strong>{{ usuario.nombre_completo }}</strong></p>
             </div>
             <a href="{{ url_for('ver_usuario', usuario_id=usuario.id) }}" class="btn btn-outline-secondary">
@@ -22,7 +22,7 @@
         <div class="card">
             <div class="card-header">
                 <h5 class="card-title mb-0">
-                    <i class="fas fa-upload"></i> Subir Archivo CSV
+                    <i class="fas fa-upload"></i> Importar desde Garmin Connect
                 </h5>
             </div>
             <div class="card-body">
@@ -158,4 +158,28 @@ document.getElementById('archivo_csv').addEventListener('change', function(e) {
     }
 });
 </script>
+
+<!-- Nueva sección para importación CSV estándar -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-file-csv"></i> Importar CSV Estándar
+                </h5>
+            </div>
+            <div class="card-body">
+                <p class="text-muted mb-3">
+                    Importa registros desde un archivo CSV con formato completo (incluyendo pliegues cutáneos y circunferencias).
+                </p>
+                <a href="{{ url_for('importar_registros', usuario_id=usuario.id) }}" class="btn btn-primary">
+                    <i class="fas fa-upload"></i> Importar CSV Completo
+                </a>
+                <a href="{{ url_for('exportar_registros', usuario_id=usuario.id) }}" class="btn btn-outline-success ms-2">
+                    <i class="fas fa-download"></i> Descargar CSV de Ejemplo
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

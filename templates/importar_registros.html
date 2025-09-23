@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% block title %}Importar Registros - {{ usuario.nombre }} {{ usuario.apellido }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1><i class="fas fa-file-import"></i> Importar Registros</h1>
+            <div>
+                <a href="{{ url_for('estadisticas', usuario_id=usuario.id) }}" class="btn btn-outline-secondary">
+                    <i class="fas fa-arrow-left"></i> Volver a Estadísticas
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-upload"></i> Importar desde CSV
+                </h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="archivo_csv" class="form-label">Seleccionar archivo CSV</label>
+                        <input type="file" class="form-control" id="archivo_csv" name="archivo_csv" accept=".csv" required>
+                        <div class="form-text">
+                            Selecciona un archivo CSV con los registros a importar. El archivo debe tener el formato correcto.
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-upload"></i> Importar Registros
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-info-circle"></i> Información
+                </h5>
+            </div>
+            <div class="card-body">
+                <h6>Formato del CSV</h6>
+                <p class="small text-muted">
+                    El archivo CSV debe contener las siguientes columnas:
+                </p>
+                <ul class="small">
+                    <li><strong>fecha</strong> - Fecha del registro</li>
+                    <li><strong>peso</strong> - Peso en kg</li>
+                    <li><strong>altura</strong> - Altura en metros</li>
+                    <li><strong>imc</strong> - IMC (opcional, se calcula automáticamente)</li>
+                    <li><strong>Pliegues cutáneos</strong> - Mediciones individuales y promedios</li>
+                    <li><strong>Circunferencias</strong> - Mediciones corporales</li>
+                </ul>
+                
+                <hr>
+                
+                <h6>Tipos de Importación</h6>
+                <div class="list-group list-group-flush">
+                    <div class="list-group-item d-flex align-items-center px-0 py-2">
+                        <i class="fas fa-file-csv text-primary me-2"></i>
+                        <div>
+                            <strong>CSV Estándar</strong><br>
+                            <small class="text-muted">Formato completo con todos los campos</small>
+                        </div>
+                    </div>
+                    <div class="list-group-item d-flex align-items-center px-0 py-2">
+                        <i class="fas fa-running text-success me-2"></i>
+                        <div>
+                            <strong>Garmin Connect</strong><br>
+                            <small class="text-muted">Exportación directa desde Garmin</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card mt-3">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-download"></i> Exportar Registros
+                </h5>
+            </div>
+            <div class="card-body">
+                <p class="small text-muted mb-3">
+                    Descarga todos los registros actuales en formato CSV para respaldo o migración.
+                </p>
+                <a href="{{ url_for('exportar_registros', usuario_id=usuario.id) }}" class="btn btn-outline-primary btn-sm">
+                    <i class="fas fa-download"></i> Descargar CSV
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Ejemplo de formato CSV -->
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-table"></i> Ejemplo de Formato CSV
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-sm table-bordered">
+                        <thead class="table-light">
+                            <tr>
+                                <th>fecha</th>
+                                <th>peso</th>
+                                <th>altura</th>
+                                <th>imc</th>
+                                <th>pliegue_tricipital_1</th>
+                                <th>pliegue_tricipital_2</th>
+                                <th>pliegue_tricipital_3</th>
+                                <th>pliegue_tricipital_promedio</th>
+                                <th>...</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2025-09-23 10:30:00</td>
+                                <td>75.5</td>
+                                <td>1.75</td>
+                                <td>24.7</td>
+                                <td>15.2</td>
+                                <td>15.8</td>
+                                <td>15.5</td>
+                                <td>15.5</td>
+                                <td>...</td>
+                            </tr>
+                            <tr>
+                                <td>2025-09-20 09:15:00</td>
+                                <td>76.2</td>
+                                <td>1.75</td>
+                                <td>24.9</td>
+                                <td>14.8</td>
+                                <td>15.1</td>
+                                <td>14.9</td>
+                                <td>14.9</td>
+                                <td>...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="alert alert-info mt-3">
+                    <h6 class="alert-heading">
+                        <i class="fas fa-lightbulb"></i> Notas Importantes
+                    </h6>
+                    <ul class="mb-0 small">
+                        <li>Los campos de fecha deben estar en formato <code>YYYY-MM-DD HH:MM:SS</code> o <code>YYYY-MM-DD</code></li>
+                        <li>Los campos numéricos deben usar punto (.) como separador decimal</li>
+                        <li>Los campos vacíos se pueden dejar en blanco o con valor vacío</li>
+                        <li>El IMC se calcula automáticamente si no se proporciona</li>
+                        <li>Los promedios de pliegues se pueden calcular automáticamente si se proporcionan las 3 mediciones</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
