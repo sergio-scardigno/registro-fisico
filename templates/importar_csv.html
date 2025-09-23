@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+
+{% block title %}Importar CSV - Registro Físico{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h1><i class="fas fa-file-import"></i> Importar Datos de Garmin</h1>
+                <p class="text-muted mb-0">Para: <strong>{{ usuario.nombre_completo }}</strong></p>
+            </div>
+            <a href="{{ url_for('ver_usuario', usuario_id=usuario.id) }}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left"></i> Volver
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-upload"></i> Subir Archivo CSV
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if not usuario.altura %}
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Advertencia:</strong> El usuario debe tener una altura configurada antes de importar datos.
+                    <a href="{{ url_for('editar_usuario', usuario_id=usuario.id) }}" class="btn btn-sm btn-warning ms-2">
+                        <i class="fas fa-edit"></i> Configurar Altura
+                    </a>
+                </div>
+                {% endif %}
+                
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="mb-4">
+                        <label for="archivo_csv" class="form-label">Seleccionar archivo CSV de Garmin</label>
+                        <input type="file" class="form-control" id="archivo_csv" name="archivo_csv" 
+                               accept=".csv" required>
+                        <div class="form-text">
+                            <i class="fas fa-info-circle"></i>
+                            Selecciona el archivo CSV exportado desde Garmin Connect con los datos de peso.
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h6><i class="fas fa-info-circle text-primary"></i> Información sobre la importación</h6>
+                        <ul class="list-unstyled">
+                            <li><i class="fas fa-check text-success"></i> Se importarán automáticamente: <strong>peso, fecha, hora e IMC</strong></li>
+                            <li><i class="fas fa-check text-success"></i> Se usará la altura configurada del usuario: <strong>{{ usuario.altura }}m</strong></li>
+                            <li><i class="fas fa-shield-alt text-info"></i> Los registros duplicados serán omitidos automáticamente</li>
+                            <li><i class="fas fa-calculator text-info"></i> El IMC se calculará automáticamente si no está en el archivo</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h6><i class="fas fa-file-csv text-secondary"></i> Formato esperado del archivo</h6>
+                        <div class="bg-light p-3 rounded">
+                            <small>
+                                El archivo CSV debe tener la siguiente estructura:<br>
+                                <code>
+                                Tiempo,Peso,Cambio,IMC,Grasa corporal,Masa muscular esquelética,Masa ósea,Agua corporal,<br>
+                                " 22 Sep 2025",<br>
+                                10:12 am,98.7 kg,2.5 kg,31.9,--,--,--,--,
+                                </code>
+                            </small>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{{ url_for('ver_usuario', usuario_id=usuario.id) }}" class="btn btn-outline-secondary me-md-2">
+                            <i class="fas fa-times"></i> Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-primary" {% if not usuario.altura %}disabled{% endif %}>
+                            <i class="fas fa-upload"></i> Importar Datos
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if usuario.altura %}
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">
+                    <i class="fas fa-history"></i> Registros Existentes
+                </h5>
+            </div>
+            <div class="card-body">
+                {% set registros_recientes = usuario.registros[:5] %}
+                {% if registros_recientes %}
+                <p class="text-muted">Últimos 5 registros del usuario:</p>
+                <div class="table-responsive">
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Hora</th>
+                                <th>Peso</th>
+                                <th>IMC</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for registro in registros_recientes %}
+                            <tr>
+                                <td>{{ registro.fecha.strftime('%d/%m/%Y') }}</td>
+                                <td>{{ registro.fecha.strftime('%H:%M') }}</td>
+                                <td>{{ registro.peso }} kg</td>
+                                <td>{{ registro.imc }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-muted">No hay registros existentes para este usuario.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Validación del archivo CSV
+document.getElementById('archivo_csv').addEventListener('change', function(e) {
+    const archivo = e.target.files[0];
+    if (archivo) {
+        if (!archivo.name.toLowerCase().endsWith('.csv')) {
+            alert('Por favor selecciona un archivo CSV válido.');
+            e.target.value = '';
+            return;
+        }
+        
+        // Mostrar información del archivo
+        const info = document.createElement('div');
+        info.className = 'mt-2 text-info';
+        info.innerHTML = `<i class="fas fa-file"></i> Archivo seleccionado: ${archivo.name} (${(archivo.size / 1024).toFixed(1)} KB)`;
+        
+        // Remover información anterior si existe
+        const infoAnterior = document.querySelector('.file-info');
+        if (infoAnterior) {
+            infoAnterior.remove();
+        }
+        
+        info.className += ' file-info';
+        e.target.parentNode.appendChild(info);
+    }
+});
+</script>
+{% endblock %}

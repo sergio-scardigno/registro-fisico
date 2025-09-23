@@ -2,6 +2,9 @@ from flask import Flask, render_template, request, redirect, url_for, flash, jso
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import os
+import csv
+import io
+import re
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'tu_clave_secreta_aqui'
@@ -401,6 +404,97 @@ class RegistroFisico(db.Model):
             diferencia = None
         
         return nivel_actual, nivel_siguiente, porcentaje_objetivo, diferencia
+
+# Funciones de importación CSV
+def parse_garmin_csv(csv_content):
+    """Parsea el contenido CSV de Garmin y retorna una lista de registros"""
+    registros = []
+    
+    # Leer el CSV
+    csv_reader = csv.reader(io.StringIO(csv_content))
+    rows = list(csv_reader)
+    
+    if len(rows) < 2:
+        return registros
+    
+    # Procesar filas de datos (saltar header)
+    i = 1
+    fecha_actual = None
+    
+    while i < len(rows):
+        row = rows[i]
+        
+        # Si la fila está vacía o solo tiene comas, saltar
+        if not row or all(cell.strip() == '' for cell in row):
+            i += 1
+            continue
+        
+        # Verificar si la fila contiene una fecha
+        if len(row) > 0 and row[0].strip() and not row[0].strip().endswith('am') and not row[0].strip().endswith('pm'):
+            # Esta fila podría contener una fecha
+            fecha_str = row[0].strip()
+            try:
+                # Parsear fecha (formato: " 22 Sep 2025")
+                fecha_clean = fecha_str.strip()
+                # Convertir mes en español a inglés
+                meses_es = {
+                    'Ene': 'Jan', 'Feb': 'Feb', 'Mar': 'Mar', 'Abr': 'Apr',
+                    'May': 'May', 'Jun': 'Jun', 'Jul': 'Jul', 'Ago': 'Aug',
+                    'Sep': 'Sep', 'Oct': 'Oct', 'Nov': 'Nov', 'Dic': 'Dec'
+                }
+                for es, en in meses_es.items():
+                    fecha_clean = fecha_clean.replace(es, en)
+                
+                fecha_actual = datetime.strptime(fecha_clean.strip(), '%d %b %Y').date()
+                i += 1
+                continue
+            except (ValueError, AttributeError):
+                i += 1
+                continue
+        
+        # Si tenemos una fecha y esta fila contiene hora y peso
+        if fecha_actual and len(row) >= 2:
+            hora_str = row[0].strip()
+            peso_str = row[1].strip()
+            imc_str = row[3].strip() if len(row) >= 4 else None
+            
+            try:
+                # Parsear hora (formato: "10:12 am")
+                hora_clean = hora_str.strip()
+                hora = datetime.strptime(hora_clean, '%I:%M %p').time()
+                
+                # Combinar fecha y hora
+                fecha_hora = datetime.combine(fecha_actual, hora)
+                
+                # Parsear peso (formato: "98.7 kg")
+                peso_match = re.search(r'(\d+\.?\d*)\s*kg', peso_str)
+                if peso_match:
+                    peso = float(peso_match.group(1))
+                else:
+                    i += 1
+                    continue
+                
+                # Parsear IMC si está disponible
+                imc = None
+                if imc_str and imc_str.strip() != '--':
+                    try:
+                        imc = float(imc_str.strip())
+                    except ValueError:
+                        pass
+                
+                registros.append({
+                    'fecha_hora': fecha_hora,
+                    'peso': peso,
+                    'imc': imc
+                })
+                
+            except (ValueError, AttributeError) as e:
+                # Si hay error parseando esta fila, continuar con la siguiente
+                pass
+        
+        i += 1
+    
+    return registros
 
 # Rutas
 @app.route('/')
@@ -805,6 +899,88 @@ def api_registros(usuario_id):
 @app.route('/guia_mediciones')
 def guia_mediciones():
     return render_template('guia_mediciones.html')
+
+@app.route('/importar_csv/<int:usuario_id>', methods=['GET', 'POST'])
+def importar_csv(usuario_id):
+    usuario = Usuario.query.get_or_404(usuario_id)
+    
+    if request.method == 'POST':
+        try:
+            # Verificar que se subió un archivo
+            if 'archivo_csv' not in request.files:
+                flash('No se seleccionó ningún archivo', 'error')
+                return redirect(url_for('importar_csv', usuario_id=usuario_id))
+            
+            archivo = request.files['archivo_csv']
+            if archivo.filename == '':
+                flash('No se seleccionó ningún archivo', 'error')
+                return redirect(url_for('importar_csv', usuario_id=usuario_id))
+            
+            if not archivo.filename.lower().endswith('.csv'):
+                flash('El archivo debe ser un CSV', 'error')
+                return redirect(url_for('importar_csv', usuario_id=usuario_id))
+            
+            # Leer el contenido del archivo
+            contenido = archivo.read().decode('utf-8')
+            
+            # Parsear el CSV
+            registros_csv = parse_garmin_csv(contenido)
+            
+            if not registros_csv:
+                flash('No se pudieron extraer datos válidos del archivo CSV', 'error')
+                return redirect(url_for('importar_csv', usuario_id=usuario_id))
+            
+            # Verificar que el usuario tenga altura guardada
+            if not usuario.altura:
+                flash('El usuario debe tener una altura configurada antes de importar datos. Por favor, edita el usuario y agrega su altura.', 'error')
+                return redirect(url_for('editar_usuario', usuario_id=usuario_id))
+            
+            # Crear registros en la base de datos
+            registros_creados = 0
+            registros_duplicados = 0
+            
+            for datos in registros_csv:
+                # Verificar si ya existe un registro para esta fecha/hora
+                registro_existente = RegistroFisico.query.filter_by(
+                    usuario_id=usuario_id,
+                    fecha=datos['fecha_hora']
+                ).first()
+                
+                if registro_existente:
+                    registros_duplicados += 1
+                    continue
+                
+                # Crear nuevo registro
+                registro = RegistroFisico(
+                    usuario_id=usuario_id,
+                    fecha=datos['fecha_hora'],
+                    peso=datos['peso'],
+                    altura=usuario.altura,
+                    imc=datos['imc'] if datos['imc'] else None
+                )
+                
+                # Calcular IMC si no se proporcionó
+                if not registro.imc:
+                    registro.imc = registro.calcular_imc()
+                
+                db.session.add(registro)
+                registros_creados += 1
+            
+            db.session.commit()
+            
+            # Mensaje de éxito
+            mensaje = f'Importación completada: {registros_creados} registros creados'
+            if registros_duplicados > 0:
+                mensaje += f', {registros_duplicados} registros duplicados omitidos'
+            
+            flash(mensaje, 'success')
+            return redirect(url_for('ver_usuario', usuario_id=usuario_id))
+            
+        except Exception as e:
+            flash(f'Error al importar el archivo: {str(e)}', 'error')
+            return redirect(url_for('importar_csv', usuario_id=usuario_id))
+    
+    return render_template('importar_csv.html', usuario=usuario)
 
 if __name__ == '__main__':
     with app.app_context():
