@@ -25,14 +25,20 @@ COPY . .
 # Crear usuario no-root para seguridad
 RUN adduser --disabled-password --gecos '' appuser
 
-# Crear directorio para la base de datos
+# Crear directorio para la base de datos como root
 RUN mkdir -p instance
 
 # Cambiar propietario de todo el directorio /app al usuario appuser
 RUN chown -R appuser:appuser /app
 
+# Cambiar a usuario appuser
+USER appuser
+
+# Crear directorio instance como appuser
+RUN mkdir -p /app/instance
+
 # Dar permisos correctos al directorio instance
-RUN chmod 777 /app/instance
+RUN chmod 755 /app/instance
 
 # Cambiar a usuario no-root
 USER appuser

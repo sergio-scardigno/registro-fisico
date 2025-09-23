@@ -28,7 +28,13 @@ def init_database():
                 print(f"Usuario actual: {os.getuid()}")
                 print(f"Grupo actual: {os.getgid()}")
                 print(f"Propietario del directorio: {instance_dir.stat().st_uid}")
-                sys.exit(1)
+                # Intentar crear el directorio con permisos correctos
+                try:
+                    instance_dir.mkdir(parents=True, exist_ok=True)
+                    print(f"✅ Directorio creado con permisos correctos")
+                except Exception as e:
+                    print(f"❌ No se pudo crear el directorio: {e}")
+                    sys.exit(1)
             
             # Crear todas las tablas
             db.create_all()
