@@ -145,10 +145,10 @@ python app.py
 2. **Construir y ejecutar con Docker Compose**
    ```bash
    # Producción
-   docker-compose up -d
+   docker compose up -d
    
    # Desarrollo
-   docker-compose --profile dev up -d
+   docker compose --profile dev up -d
    ```
 
 3. **O usar Docker directamente**
@@ -191,7 +191,7 @@ python app.py
 3. **Ejecutar con Docker Compose**
    ```bash
    # Producción
-   docker-compose -f docker-compose.prod.yml up -d
+   docker compose -f docker-compose.prod.yml up -d
    
    # O con Docker directamente
    docker run -d -p 5000:5000 -v $(pwd)/data:/app/instance --name registro-fisico sergioscardigno82/registro-fisico:latest
@@ -342,7 +342,7 @@ El archivo CSV incluye:
    ```bash
    # Ubuntu/Debian
    sudo apt update
-   sudo apt install docker.io docker-compose
+   sudo apt install docker.io docker-compose-plugin
    sudo systemctl start docker
    sudo systemctl enable docker
    
@@ -398,7 +398,7 @@ curl http://localhost:5000
 4. **Ejecutar la aplicación**
    ```bash
    # Con Docker Compose (recomendado)
-   docker-compose -f docker-compose.prod.yml up -d
+   docker compose -f docker-compose.prod.yml up -d
    
    # O con Docker directamente
    docker run -d -p 5000:5000 -v $(pwd)/data:/app/instance --name registro-fisico sergioscardigno82/registro-fisico:latest
@@ -466,17 +466,17 @@ chmod +x deploy-server.sh
 
 ```bash
 # Actualizar aplicación
-docker-compose -f docker-compose.prod.yml pull
-docker-compose -f docker-compose.prod.yml up -d
+docker compose -f docker-compose.prod.yml pull
+docker compose -f docker-compose.prod.yml up -d
 
 # Ver logs
-docker-compose -f docker-compose.prod.yml logs -f
+docker compose -f docker-compose.prod.yml logs -f
 
 # Reiniciar aplicación
-docker-compose -f docker-compose.prod.yml restart
+docker compose -f docker-compose.prod.yml restart
 
 # Detener aplicación
-docker-compose -f docker-compose.prod.yml down
+docker compose -f docker-compose.prod.yml down
 
 # Respaldar datos
 tar -czf backup-$(date +%Y%m%d).tar.gz ./data/

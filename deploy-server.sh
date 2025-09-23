@@ -25,7 +25,7 @@ check_docker() {
         
         # Instalar Docker
         sudo apt update
-        sudo apt install -y docker.io docker-compose
+        sudo apt install -y docker.io docker-compose-plugin
         sudo systemctl start docker
         sudo systemctl enable docker
         
@@ -35,10 +35,10 @@ check_docker() {
         exit 1
     fi
     
-    if ! command -v docker-compose &> /dev/null; then
+    if ! docker compose version &> /dev/null; then
         print_message "❌ Docker Compose no está instalado" $RED
         print_message "📦 Instalando Docker Compose..." $YELLOW
-        sudo apt install -y docker-compose
+        sudo apt install -y docker-compose-plugin
     fi
 }
 
@@ -71,10 +71,10 @@ start_app() {
     print_message "🚀 Iniciando aplicación..." $YELLOW
     
     # Detener contenedores existentes si los hay
-    docker-compose -f docker-compose.prod.yml down 2>/dev/null || true
+    docker compose -f docker-compose.prod.yml down 2>/dev/null || true
     
     # Iniciar aplicación
-    docker-compose -f docker-compose.prod.yml up -d
+    docker compose -f docker-compose.prod.yml up -d
     
     # Esperar a que la aplicación esté lista
     print_message "⏳ Esperando a que la aplicación esté lista..." $YELLOW
@@ -104,14 +104,14 @@ show_status() {
 # Función para detener la aplicación
 stop_app() {
     print_message "🛑 Deteniendo aplicación..." $YELLOW
-    docker-compose -f docker-compose.prod.yml down
+    docker compose -f docker-compose.prod.yml down
     print_message "✅ Aplicación detenida" $GREEN
 }
 
 # Función para reiniciar la aplicación
 restart_app() {
     print_message "🔄 Reiniciando aplicación..." $YELLOW
-    docker-compose -f docker-compose.prod.yml restart
+    docker compose -f docker-compose.prod.yml restart
     print_message "✅ Aplicación reiniciada" $GREEN
 }
 
@@ -119,8 +119,8 @@ restart_app() {
 update_app() {
     print_message "🔄 Actualizando aplicación..." $YELLOW
     pull_image
-    docker-compose -f docker-compose.prod.yml down
-    docker-compose -f docker-compose.prod.yml up -d
+    docker compose -f docker-compose.prod.yml down
+    docker compose -f docker-compose.prod.yml up -d
     print_message "✅ Aplicación actualizada" $GREEN
 }
 
@@ -159,7 +159,7 @@ show_help() {
 # Función para ver logs
 show_logs() {
     print_message "📋 Mostrando logs en tiempo real (Ctrl+C para salir)..." $YELLOW
-    docker-compose -f docker-compose.prod.yml logs -f
+    docker compose -f docker-compose.prod.yml logs -f
 }
 
 # Función principal

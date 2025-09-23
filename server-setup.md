@@ -11,7 +11,7 @@ ssh usuario@tu-servidor.com
 ```bash
 # Ubuntu/Debian
 sudo apt update
-sudo apt install docker.io docker-compose
+sudo apt install docker.io docker-compose-plugin
 sudo systemctl start docker
 sudo systemctl enable docker
 
@@ -42,7 +42,7 @@ mkdir -p /app/instance
 ### 5. Ejecutar la Aplicación
 ```bash
 # Con Docker Compose (recomendado)
-docker-compose -f docker-compose.prod.yml up -d
+docker compose -f docker-compose.prod.yml up -d
 
 # O con Docker directamente
 docker run -d -p 5000:5000 -v $(pwd)/data:/app/instance --name registro-fisico sergioscardigno82/registro-fisico:latest
@@ -65,13 +65,13 @@ curl http://localhost:5000
 ### Ver Estado
 ```bash
 docker ps | grep registro-fisico
-docker-compose -f docker-compose.prod.yml ps
+docker compose -f docker-compose.prod.yml ps
 ```
 
 ### Ver Logs
 ```bash
 # Logs en tiempo real
-docker-compose -f docker-compose.prod.yml logs -f
+docker compose -f docker-compose.prod.yml logs -f
 
 # Logs específicos
 docker logs registro-fisico-app
@@ -79,21 +79,21 @@ docker logs registro-fisico-app
 
 ### Reiniciar
 ```bash
-docker-compose -f docker-compose.prod.yml restart
+docker compose -f docker-compose.prod.yml restart
 ```
 
 ### Actualizar
 ```bash
 # Descargar última versión
-docker-compose -f docker-compose.prod.yml pull
+docker compose -f docker-compose.prod.yml pull
 
 # Reiniciar con nueva versión
-docker-compose -f docker-compose.prod.yml up -d
+docker compose -f docker-compose.prod.yml up -d
 ```
 
 ### Detener
 ```bash
-docker-compose -f docker-compose.prod.yml down
+docker compose -f docker-compose.prod.yml down
 ```
 
 ### Respaldar Datos
@@ -199,7 +199,7 @@ docker system prune -f
 docker logs registro-fisico-app | grep -i error
 
 # Reiniciar solo la base de datos
-docker-compose -f docker-compose.prod.yml restart
+docker compose -f docker-compose.prod.yml restart
 ```
 
 ## 📝 Notas Importantes
@@ -219,5 +219,5 @@ Para configurar actualizaciones automáticas, puedes usar un cron job:
 crontab -e
 
 # Agregar línea para actualizar cada día a las 2 AM
-0 2 * * * cd /ruta/a/registro-fisico && docker-compose -f docker-compose.prod.yml pull && docker-compose -f docker-compose.prod.yml up -d
+0 2 * * * cd /ruta/a/registro-fisico && docker compose -f docker-compose.prod.yml pull && docker compose -f docker-compose.prod.yml up -d
 ```

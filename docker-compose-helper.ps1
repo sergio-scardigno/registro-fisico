@@ -13,11 +13,11 @@ switch ($comando.ToLower()) {
     "start" {
         if ($ambiente -eq "dev") {
             Write-Host "🚀 Iniciando en modo DESARROLLO..." -ForegroundColor Yellow
-            docker-compose -f docker-compose.dev.yml up -d
+            docker compose -f docker-compose.dev.yml up -d
             Write-Host "✅ Aplicación iniciada en: http://localhost:5001" -ForegroundColor Green
         } else {
             Write-Host "🚀 Iniciando en modo PRODUCCIÓN..." -ForegroundColor Yellow
-            docker-compose -f docker-compose.prod.yml up -d
+            docker compose -f docker-compose.prod.yml up -d
             Write-Host "✅ Aplicación iniciada en: http://localhost:5000" -ForegroundColor Green
         }
     }
@@ -25,10 +25,10 @@ switch ($comando.ToLower()) {
     "stop" {
         if ($ambiente -eq "dev") {
             Write-Host "🛑 Deteniendo modo DESARROLLO..." -ForegroundColor Yellow
-            docker-compose -f docker-compose.dev.yml down
+            docker compose -f docker-compose.dev.yml down
         } else {
             Write-Host "🛑 Deteniendo modo PRODUCCIÓN..." -ForegroundColor Yellow
-            docker-compose -f docker-compose.prod.yml down
+            docker compose -f docker-compose.prod.yml down
         }
         Write-Host "✅ Aplicación detenida" -ForegroundColor Green
     }
@@ -36,11 +36,11 @@ switch ($comando.ToLower()) {
     "restart" {
         if ($ambiente -eq "dev") {
             Write-Host "🔄 Reiniciando modo DESARROLLO..." -ForegroundColor Yellow
-            docker-compose -f docker-compose.dev.yml restart
+            docker compose -f docker-compose.dev.yml restart
             Write-Host "✅ Aplicación reiniciada en: http://localhost:5001" -ForegroundColor Green
         } else {
             Write-Host "🔄 Reiniciando modo PRODUCCIÓN..." -ForegroundColor Yellow
-            docker-compose -f docker-compose.prod.yml restart
+            docker compose -f docker-compose.prod.yml restart
             Write-Host "✅ Aplicación reiniciada en: http://localhost:5000" -ForegroundColor Green
         }
     }
@@ -48,10 +48,10 @@ switch ($comando.ToLower()) {
     "logs" {
         if ($ambiente -eq "dev") {
             Write-Host "📋 Mostrando logs de DESARROLLO..." -ForegroundColor Yellow
-            docker-compose -f docker-compose.dev.yml logs -f
+            docker compose -f docker-compose.dev.yml logs -f
         } else {
             Write-Host "📋 Mostrando logs de PRODUCCIÓN..." -ForegroundColor Yellow
-            docker-compose -f docker-compose.prod.yml logs -f
+            docker compose -f docker-compose.prod.yml logs -f
         }
     }
     
