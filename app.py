@@ -5,7 +5,7 @@ import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'tu_clave_secreta_aqui'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////app/instance/registro_fisico.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{os.path.join(os.path.dirname(os.path.abspath(__file__)), "instance", "registro_fisico.db")}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -492,9 +492,20 @@ def nuevo_registro(usuario_id):
                     return sum(valores_validos) / len(valores_validos)
                 return None
             
+            # Obtener fecha y hora de la muestra
+            fecha_muestra = request.form.get('fecha_muestra')
+            hora_muestra = request.form.get('hora_muestra')
+            
+            # Crear datetime combinando fecha y hora
+            if fecha_muestra and hora_muestra:
+                fecha_hora_muestra = datetime.strptime(f"{fecha_muestra} {hora_muestra}", '%Y-%m-%d %H:%M')
+            else:
+                fecha_hora_muestra = datetime.utcnow()
+            
             # Crear nuevo registro
             registro = RegistroFisico(
                 usuario_id=usuario_id,
+                fecha=fecha_hora_muestra,
                 peso=peso,
                 altura=altura,
                 # Pliegues cutáneos - Tricipital
@@ -606,6 +617,15 @@ def editar_registro(id):
                 if len(valores_validos) >= 2:  # Al menos 2 mediciones válidas
                     return sum(valores_validos) / len(valores_validos)
                 return None
+            
+            # Obtener fecha y hora de la muestra
+            fecha_muestra = request.form.get('fecha_muestra')
+            hora_muestra = request.form.get('hora_muestra')
+            
+            # Crear datetime combinando fecha y hora
+            if fecha_muestra and hora_muestra:
+                fecha_hora_muestra = datetime.strptime(f"{fecha_muestra} {hora_muestra}", '%Y-%m-%d %H:%M')
+                registro.fecha = fecha_hora_muestra
             
             # Actualizar datos
             registro.peso = float(request.form['peso'])

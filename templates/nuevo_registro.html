@@ -28,6 +28,27 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group mb-3">
+                                <label for="fecha_muestra" class="form-label">Fecha de la muestra *</label>
+                                <input type="date" class="form-control" id="fecha_muestra" name="fecha_muestra" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group mb-3">
+                                <label for="hora_muestra" class="form-label">Hora de la muestra *</label>
+                                <input type="time" class="form-control" id="hora_muestra" name="hora_muestra" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group mb-3">
+                                <button type="button" class="btn btn-outline-primary btn-sm mt-4" onclick="setCurrentDateTime()">
+                                    <i class="fas fa-clock"></i> Usar fecha/hora actual
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
                         <div class="col-md-6">
                             <div class="form-group mb-3">
                                 <label for="peso" class="form-label">Peso (kg) *</label>
@@ -421,6 +442,21 @@
 
 {% block scripts %}
 <script>
+// Función para establecer la fecha y hora actual
+function setCurrentDateTime() {
+    const now = new Date();
+    const fecha = now.toISOString().split('T')[0];
+    const hora = now.toTimeString().split(' ')[0].substring(0, 5);
+    
+    document.getElementById('fecha_muestra').value = fecha;
+    document.getElementById('hora_muestra').value = hora;
+}
+
+// Establecer fecha y hora actual al cargar la página
+document.addEventListener('DOMContentLoaded', function() {
+    setCurrentDateTime();
+});
+
 function calcularIMC() {
     const peso = parseFloat(document.getElementById('peso').value) || 0;
     const altura = parseFloat(document.getElementById('altura').value) || 0;
