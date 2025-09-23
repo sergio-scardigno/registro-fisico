@@ -40,9 +40,6 @@ RUN mkdir -p /app/instance
 # Dar permisos correctos al directorio instance
 RUN chmod 755 /app/instance
 
-# Cambiar a usuario no-root
-USER appuser
-
 # Exponer puerto 5000
 EXPOSE 5000
 
