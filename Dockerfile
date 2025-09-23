@@ -37,8 +37,8 @@ USER appuser
 # Crear directorio instance como appuser
 RUN mkdir -p /app/instance
 
-# Dar permisos correctos al directorio instance
-RUN chmod 755 /app/instance
+# Dar permisos de escritura al directorio instance
+RUN chmod 777 /app/instance
 
 # Exponer puerto 5000
 EXPOSE 5000
