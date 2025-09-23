@@ -8,7 +8,10 @@ import re
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'tu_clave_secreta_aqui'
-app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{os.path.join(os.path.dirname(os.path.abspath(__file__)), "instance", "registro_fisico.db")}'
+# Use a more accessible database path for Linux
+db_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "registro_fisico.db")
+os.makedirs(os.path.dirname(db_path), exist_ok=True)
+app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{db_path}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -1413,6 +1416,6 @@ if __name__ == '__main__':
         db.create_all()
     
     # Configuración para Docker
-    host = '0.0.0.0' if os.environ.get('FLASK_ENV') == 'production' else '127.0.0.1'
+    host = '0.0.0.0' if os.environ.get('FLASK_ENV') == 'production' else '0.0.0.0'
     debug = os.environ.get('FLASK_ENV') != 'production'
     app.run(host=host, debug=debug)
