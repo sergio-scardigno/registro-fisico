@@ -5,7 +5,7 @@ import os
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'tu_clave_secreta_aqui'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///registro_fisico.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////app/instance/registro_fisico.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
