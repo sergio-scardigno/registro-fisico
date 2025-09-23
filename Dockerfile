@@ -26,12 +26,13 @@ COPY . .
 RUN mkdir -p instance
 
 # Crear usuario no-root para seguridad
-RUN adduser --disabled-password --gecos '' appuser && \
-    chown -R appuser:appuser /app && \
-    chmod -R 755 /app/instance
+RUN adduser --disabled-password --gecos '' appuser
 
-# Asegurar que el directorio instance tenga permisos correctos
+# Dar permisos correctos al directorio instance
 RUN chmod 777 /app/instance
+
+# Cambiar propietario de todo el directorio /app al usuario appuser
+RUN chown -R appuser:appuser /app
 
 # Cambiar a usuario no-root
 USER appuser

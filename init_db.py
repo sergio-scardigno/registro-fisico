@@ -25,6 +25,14 @@ def init_database():
             if not os.access(instance_dir, os.W_OK):
                 print(f"❌ Error: No hay permisos de escritura en {instance_dir}")
                 print(f"Permisos actuales: {oct(instance_dir.stat().st_mode)[-3:]}")
+                print(f"Usuario actual: {os.getuid()}")
+                print(f"Grupo actual: {os.getgid()}")
+                # Intentar cambiar permisos
+                try:
+                    os.chmod(instance_dir, 0o777)
+                    print(f"✅ Permisos cambiados a 777")
+                except Exception as e:
+                    print(f"❌ No se pudieron cambiar los permisos: {e}")
                 sys.exit(1)
             
             # Crear todas las tablas
