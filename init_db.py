@@ -26,7 +26,21 @@ def init_database():
                 print(f"❌ Error: No se pudo crear el directorio {instance_dir}")
                 sys.exit(1)
             
+            # Verificar permisos del directorio
+            stat_info = instance_dir.stat()
+            permisos = oct(stat_info.st_mode)[-3:]
             print(f"✅ Directorio {instance_dir} creado correctamente")
+            print(f"📁 Permisos del directorio: {permisos}")
+            print(f"👤 Usuario actual: {os.getuid()}")
+            print(f"👥 Grupo actual: {os.getgid()}")
+            print(f"📂 Propietario del directorio: {stat_info.st_uid}")
+            
+            # Verificar si podemos escribir
+            if not os.access(instance_dir, os.W_OK):
+                print(f"❌ Error: No hay permisos de escritura en {instance_dir}")
+                sys.exit(1)
+            
+            print(f"✅ Permisos de escritura verificados")
             
             # Crear todas las tablas
             db.create_all()
