@@ -60,7 +60,14 @@
                             <div class="form-group mb-3">
                                 <label for="altura" class="form-label">Altura (m) *</label>
                                 <input type="number" class="form-control" id="altura" name="altura" 
-                                       step="0.01" min="0" max="3" required>
+                                       step="0.01" min="0" max="3" 
+                                       value="{{ usuario.altura or '' }}" required>
+                                {% if usuario.altura %}
+                                <div class="form-text">
+                                    <i class="fas fa-info-circle text-primary"></i>
+                                    Altura guardada del usuario. Puedes modificarla si es necesario.
+                                </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>

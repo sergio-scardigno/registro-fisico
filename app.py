@@ -17,6 +17,7 @@ class Usuario(db.Model):
     apellido = db.Column(db.String(100), nullable=False)
     fecha_nacimiento = db.Column(db.Date)
     genero = db.Column(db.String(10))  # 'M' o 'F'
+    altura = db.Column(db.Float)  # Altura en metros para reutilizar en registros
     fecha_creacion = db.Column(db.DateTime, default=datetime.utcnow)
     activo = db.Column(db.Boolean, default=True)
     
@@ -422,11 +423,21 @@ def gestion_usuarios():
 def nuevo_usuario():
     if request.method == 'POST':
         try:
+            # Obtener altura si se proporciona
+            altura_str = request.form.get('altura')
+            altura = None
+            if altura_str and altura_str.strip():
+                try:
+                    altura = float(altura_str)
+                except ValueError:
+                    pass  # Si no es un número válido, usar None
+            
             usuario = Usuario(
                 nombre=request.form['nombre'],
                 apellido=request.form['apellido'],
                 fecha_nacimiento=datetime.strptime(request.form['fecha_nacimiento'], '%Y-%m-%d').date() if request.form.get('fecha_nacimiento') else None,
-                genero=request.form.get('genero')
+                genero=request.form.get('genero'),
+                altura=altura
             )
             db.session.add(usuario)
             db.session.commit()
@@ -448,6 +459,14 @@ def editar_usuario(usuario_id):
             usuario.fecha_nacimiento = datetime.strptime(request.form['fecha_nacimiento'], '%Y-%m-%d').date() if request.form.get('fecha_nacimiento') else None
             usuario.genero = request.form.get('genero')
             usuario.activo = 'activo' in request.form
+            
+            # Actualizar altura si se proporciona
+            altura_str = request.form.get('altura')
+            if altura_str and altura_str.strip():
+                try:
+                    usuario.altura = float(altura_str)
+                except ValueError:
+                    pass  # Si no es un número válido, no actualizar
             
             db.session.commit()
             flash('Usuario actualizado exitosamente!', 'success')
@@ -501,6 +520,11 @@ def nuevo_registro(usuario_id):
                 fecha_hora_muestra = datetime.strptime(f"{fecha_muestra} {hora_muestra}", '%Y-%m-%d %H:%M')
             else:
                 fecha_hora_muestra = datetime.utcnow()
+            
+            # Actualizar la altura del usuario si no la tiene guardada
+            if not usuario.altura:
+                usuario.altura = altura
+                db.session.commit()
             
             # Crear nuevo registro
             registro = RegistroFisico(
@@ -629,7 +653,12 @@ def editar_registro(id):
             
             # Actualizar datos
             registro.peso = float(request.form['peso'])
-            registro.altura = float(request.form['altura'])
+            nueva_altura = float(request.form['altura'])
+            registro.altura = nueva_altura
+            
+            # Actualizar la altura del usuario si no la tiene guardada o si es diferente
+            if not registro.usuario.altura or registro.usuario.altura != nueva_altura:
+                registro.usuario.altura = nueva_altura
             
             # Pliegues cutáneos - Tricipital
             registro.pliegue_tricipital_1 = safe_float(request.form.get('pliegue_tricipital_1'))

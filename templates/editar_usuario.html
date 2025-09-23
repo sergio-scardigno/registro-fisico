@@ -42,7 +42,7 @@
                     </div>
                     
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group mb-3">
                                 <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
                                 <input type="date" class="form-control" id="fecha_nacimiento" 
@@ -50,7 +50,7 @@
                                        value="{{ usuario.fecha_nacimiento.strftime('%Y-%m-%d') if usuario.fecha_nacimiento else '' }}">
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group mb-3">
                                 <label for="genero" class="form-label">Género</label>
                                 <select class="form-select" id="genero" name="genero">
@@ -58,6 +58,18 @@
                                     <option value="M" {% if usuario.genero == 'M' %}selected{% endif %}>Masculino</option>
                                     <option value="F" {% if usuario.genero == 'F' %}selected{% endif %}>Femenino</option>
                                 </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group mb-3">
+                                <label for="altura" class="form-label">Altura (m)</label>
+                                <input type="number" class="form-control" id="altura" name="altura" 
+                                       step="0.01" min="0" max="3" 
+                                       value="{{ usuario.altura or '' }}">
+                                <div class="form-text">
+                                    <i class="fas fa-info-circle text-primary"></i>
+                                    Esta altura se usará por defecto en nuevos registros.
+                                </div>
                             </div>
                         </div>
                     </div>

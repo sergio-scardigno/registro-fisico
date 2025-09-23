@@ -60,6 +60,20 @@
                                 <label for="altura" class="form-label">Altura (m) *</label>
                                 <input type="number" class="form-control" id="altura" name="altura" 
                                        step="0.01" min="0" max="3" value="{{ registro.altura }}" required>
+                                {% if registro.usuario.altura and registro.usuario.altura != registro.altura %}
+                                <div class="form-text">
+                                    <i class="fas fa-info-circle text-warning"></i>
+                                    Altura guardada del usuario: {{ registro.usuario.altura }}m. 
+                                    <button type="button" class="btn btn-sm btn-outline-primary" onclick="usarAlturaUsuario()">
+                                        Usar altura del usuario
+                                    </button>
+                                </div>
+                                {% elif registro.usuario.altura %}
+                                <div class="form-text">
+                                    <i class="fas fa-check-circle text-success"></i>
+                                    Usando altura guardada del usuario.
+                                </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -475,6 +489,15 @@ function setCurrentDateTime() {
     
     document.getElementById('fecha_muestra').value = fecha;
     document.getElementById('hora_muestra').value = hora;
+}
+
+// Función para usar la altura guardada del usuario
+function usarAlturaUsuario() {
+    const alturaUsuario = {{ registro.usuario.altura or 'null' }};
+    if (alturaUsuario) {
+        document.getElementById('altura').value = alturaUsuario;
+        calcularIMC(); // Recalcular IMC con la nueva altura
+    }
 }
 
 function calcularIMC() {

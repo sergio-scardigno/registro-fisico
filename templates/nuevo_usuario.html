@@ -42,14 +42,14 @@
                     </div>
                     
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group mb-3">
                                 <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
                                 <input type="date" class="form-control" id="fecha_nacimiento" 
                                        name="fecha_nacimiento">
                             </div>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group mb-3">
                                 <label for="genero" class="form-label">Género</label>
                                 <select class="form-select" id="genero" name="genero">
@@ -57,6 +57,17 @@
                                     <option value="M">Masculino</option>
                                     <option value="F">Femenino</option>
                                 </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group mb-3">
+                                <label for="altura" class="form-label">Altura (m)</label>
+                                <input type="number" class="form-control" id="altura" name="altura" 
+                                       step="0.01" min="0" max="3">
+                                <div class="form-text">
+                                    <i class="fas fa-info-circle text-primary"></i>
+                                    Opcional. Se usará por defecto en nuevos registros.
+                                </div>
                             </div>
                         </div>
                     </div>
