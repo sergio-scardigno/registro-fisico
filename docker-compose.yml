@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   # Servicio principal de la aplicación
   registro-fisico:
@@ -37,8 +35,3 @@ services:
     restart: unless-stopped
     profiles:
       - dev
-
-# Volúmenes para persistencia de datos
-volumes:
-  data:
-    driver: local

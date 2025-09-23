@@ -30,6 +30,9 @@ RUN adduser --disabled-password --gecos '' appuser && \
     chown -R appuser:appuser /app && \
     chmod -R 755 /app/instance
 
+# Asegurar que el directorio instance tenga permisos correctos
+RUN chmod 777 /app/instance
+
 # Cambiar a usuario no-root
 USER appuser
 

@@ -21,6 +21,12 @@ def init_database():
             instance_dir = Path('/app/instance')
             instance_dir.mkdir(exist_ok=True)
             
+            # Verificar permisos del directorio
+            if not os.access(instance_dir, os.W_OK):
+                print(f"❌ Error: No hay permisos de escritura en {instance_dir}")
+                print(f"Permisos actuales: {oct(instance_dir.stat().st_mode)[-3:]}")
+                sys.exit(1)
+            
             # Crear todas las tablas
             db.create_all()
             print("✅ Base de datos inicializada correctamente")
@@ -43,6 +49,11 @@ def init_database():
                 
         except Exception as e:
             print(f"❌ Error al inicializar la base de datos: {e}")
+            print(f"Directorio actual: {os.getcwd()}")
+            print(f"Directorio instance: {instance_dir}")
+            print(f"Existe: {instance_dir.exists()}")
+            if instance_dir.exists():
+                print(f"Permisos: {oct(instance_dir.stat().st_mode)[-3:]}")
             sys.exit(1)
 
 if __name__ == "__main__":
