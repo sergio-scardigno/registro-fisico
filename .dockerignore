@@ -1,40 +1,47 @@
-# Archivos de Python
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
+# Git
+.git
+.gitignore
+README.md
 
-# Entornos virtuales
-venv/
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+env
+pip-log.txt
+pip-delete-this-directory.txt
+.tox
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.git
+.mypy_cache
+.pytest_cache
+.hypothesis
+
+# Virtual environments
+.env
+.venv
 env/
+venv/
 ENV/
 env.bak/
 venv.bak/
 
-# IDEs
+# IDE
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
 
-# Sistema operativo
+# OS
 .DS_Store
 .DS_Store?
 ._*
@@ -43,41 +50,14 @@ venv.bak/
 ehthumbs.db
 Thumbs.db
 
-# Git
-.git/
-.gitignore
-
 # Docker
-Dockerfile*
-docker-compose*
+Dockerfile
+docker-compose*.yml
 .dockerignore
 
-# Logs
-*.log
-logs/
-
-# Base de datos local (se creará en el contenedor)
-instance/
-*.db
-*.sqlite
-*.sqlite3
-
-# Archivos temporales
-*.tmp
-*.temp
-temp/
-tmp/
-
-# Documentación de desarrollo
-DEMO.md
-iniciar.bat
-
-# Archivos de configuración local
-.env
-.env.local
-.env.development
-.env.test
-.env.production
-
-# Directorio de datos (se montará como volumen)
+# Data directories (will be mounted as volumes)
 data/
+instance/
+
+# Development files
+DEMO.md
