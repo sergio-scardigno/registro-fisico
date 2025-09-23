@@ -22,17 +22,17 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copiar código de la aplicación
 COPY . .
 
-# Crear directorio para la base de datos
-RUN mkdir -p instance
-
 # Crear usuario no-root para seguridad
 RUN adduser --disabled-password --gecos '' appuser
 
-# Dar permisos correctos al directorio instance
-RUN chmod 777 /app/instance
+# Crear directorio para la base de datos
+RUN mkdir -p instance
 
 # Cambiar propietario de todo el directorio /app al usuario appuser
 RUN chown -R appuser:appuser /app
+
+# Dar permisos correctos al directorio instance
+RUN chmod 777 /app/instance
 
 # Cambiar a usuario no-root
 USER appuser
